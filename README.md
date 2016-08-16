@@ -591,17 +591,22 @@ ArticleTableViewCell.swiftのbindDataCellという関数を以下のようにし
         }
     }
     
-ArticleViewController側（呼び出し側）では以下のようにします。
+ArticleViewController側（呼び出し側）では以下のようにします。`class ArticleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {`と`ArticleViewController`の定義時にまとめて`TableViewDelegate`を書くことが可能ですが、なるべくそれぞれのDelegate単位で`extension`を使って分割していくようにします。また`// MARK: - UITableViewDataSource`とコメントをつける習慣もつけましょう。
 
-    // return the number of tableViewCells
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articles?.count ?? 0
-    }
-    // draw the tableCells
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell: ArticleTableViewCell = tableView.dequeueReusableCellWithIdentifier("ArticleTableViewCell") as! ArticleTableViewCell
-        cell.bindDataCell(articles![indexPath.row])
-        return cell
+    extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
+    
+        // MARK: - UITableViewDataSource
+        
+        // return the number of tableViewCells
+        func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return articles?.count ?? 0
+        }
+        // draw the tableCells
+        func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+            let cell: ArticleTableViewCell = tableView.dequeueReusableCellWithIdentifier("ArticleTableViewCell") as! ArticleTableViewCell
+            cell.bindDataCell(articles![indexPath.row])
+            return cell
+        }
     }
 
 `indexPath`には`row`と`section`というプロパティが存在して、`section`はTableのかたまりで、`row`はその中でのインデックスに相当します。ここではsectionは一つしかないので`row`のみ利用します。`CellForRowAtIndexPath`では`indexPath`順に一つ一つのCellが描画されていきます。
@@ -778,6 +783,8 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
     
     extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
         
+        // MARK: - UITableViewDataSource
+        
         // return the number of tableCells
         func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return articles?.count ?? 0
@@ -788,7 +795,6 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
             cell.bindDataCell(articles![indexPath.row])
             return cell
         }
-        
     }
 
 
