@@ -92,7 +92,8 @@ ArticleTableViewCellの関連付けやIdentifierの設定を行います。
 
 ![関連付け](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/16.png)
 
-ArticleTableViewCell.swiftとUIView（Cellには入っているViewパーツ）の関連付けをしていきます。ここで、ArticleTableViewCellに入っているViewパーツに`thumbnail`や`title`、`desc`、`date`という名前の変数を作成します。コントロールを押しながらViewパーツをドラッグしてArticleTableViewCell.swiftと繋ぎましょう。
+ArticleTableViewCell.swiftとUIView（Cellには入っているViewパーツ）の関連付けをしていきます。ここで、ArticleTableViewCellに入っているViewパーツに`thumbnail`や`title`、`desc`、`date`という名前の変数を作成します。コントロールを押しながらViewパーツをドラッグしてArticleTableViewCell.swiftと繋ぎましょう。2画面にするにはXcodeの右上にある2つの円が重なっているマークをクリックします。
+![２画面にする方法](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/24.png)
 
     @IBOutlet weak var thumbnail: UIImageView!
     @IBOutlet weak var title: UILabel!
@@ -705,5 +706,42 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
 
 ### 記事詳細ページの作成
 
+Storyboardsの中にあるArticleDetail.storyboardを編集していきます。この中にViewControllerを挿入して、ViewControllerというフォルダの中にあるArticleDetailViewControllerと関連付けをします。
 
+![ArticleDetailStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/22.png)
+
+ここでは、Storyboardの分割・遷移にフォーカスしているので、記事詳細ページで表示するのは`article.body`だけにとどめておきます。下の画像のようにtextViewを挿入します。Constraintも自分で自由に設定して良いです。
+
+![textViewの追加](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/23.png)
+
+ArticleDetailViewControllerと先ほど追加したtextViewを関連付けます。基本的にStoryboardにあるものはすべてコードでも関連付けをしないといけないと思っておいて良いでしょう。ArticleDetailViewControllerは以下のようになります。
+    
+    ▼ArticleDetailViewController.swift
+    
+    import UIKit
+    import SwiftyJSON
+    import Alamofire
+    
+    class ArticleDetailViewController: UIViewController {
+
+        let apiManager: APIManager = APIManager.sharedInstance
+        var article: Article?
+    
+        @IBOutlet weak var text: UITextView!
+    
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            if let article = article {
+                text.text = article.body
+                text.editable = false
+            }
+        }
+    
+        override func didReceiveMemoryWarning() {
+            super.didReceiveMemoryWarning()
+        }
+        
+    }
+
+あとはArticleViewControllerから遷移して、その際にArticleを受け渡せばよいです。
 
