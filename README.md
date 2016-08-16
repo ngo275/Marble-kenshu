@@ -855,7 +855,48 @@ ArticleDetailViewControllerは以下のようになります。
 
 ここまでくるとタップすると遷移できているはずです。
 
+記事一覧を表示するときに、Cellを登録する・表示する時にProtocolに切り出しましたが、ここでもStoryboardの遷移の関数は繰り返し使うのでProtocolに切り出して統一しましょう。
 
+ProtocolsというフォルダにStoryboardLoadable.swiftというファイルを作成して以下のように記述します。
+
+    import UIKit
+
+    protocol StoryboardLoadable: class {
+        static var storyboardName: String { get }
+    }
+    
+    extension StoryboardLoadable where Self: UIViewController {
+
+        static var storyboardName: String {
+            return NSStringFromClass(self).componentsSeparatedByString(".").last!.stringByReplacingOccurrencesOfString("ViewController", withString: "")
+        }
+        
+    }
+
+そして、Utilsの中にあるUtils.swiftに
+
+    static func createViewController<T: StoryboardLoadable>() -> T {
+        let sb = UIStoryboard(name: T.storyboardName, bundle: nil)
+        return sb.instantiateInitialViewController() as! T
+    }
+
+と加えておきます。どこかに以下のプロトコル適用を書いておきます。場所はどこでも良いですが、ArticleViewController.swiftに書いておきます。
+
+    // MARK - StoryboardLoadable
+    extension UIViewController: StoryboardLoadable {}
+
+さきほどまでは巨大だった関数もこのようにスッキリします。このようにプロトコルを利用する方法を取り入れていきましょう。
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+            let vc: ArticleDetailViewController = Utils.createViewController()
+            vc.article = articles![indexPath.row]
+            navigationController?.pushViewController(vc, animated: true)
+
+    }
+
+### Tabの利用
+
+今はまだタブがなく記事一覧ページがいきなり出てくるだけなのでタブを取り入れてコンテンツを増やしていきたいと思います。
 
 
 
