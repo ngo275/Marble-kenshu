@@ -8,7 +8,6 @@
         <!--Article View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="BYZ-38-t0r" customClass="ArticleViewController" customModule="test1" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
@@ -46,7 +45,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="gK9-j5-Vcf"/>
+                    <connections>
+                        <outlet property="tableView" destination="JvB-Xa-vwZ" id="CpV-9g-mfn"/>
+                    </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1083" y="-303"/>
         </scene>

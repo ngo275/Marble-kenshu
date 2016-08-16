@@ -14,6 +14,8 @@ class ArticleTableViewCell: UITableViewCell {
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var desc: UILabel!
     @IBOutlet weak var date: UILabel!
+    @IBOutlet weak var user: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -25,8 +27,18 @@ class ArticleTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
-    func bindDataCell() {
-        // ここでArticleオブジェクトを受け取って、cellの作成を行います.
+    func bindDataCell(article: Article) {
+        // 引数にArticleオブジェクトを受け取って、cellの作成を行います.
+        self.title.text = article.title
+        self.date.text = String(article.modified)
+        self.desc.text = article.body
+        self.user.text = article.userData.userName
+        if let thumbnail: String = article.thumb {
+            if let data = NSData(contentsOfURL: NSURL(string: thumbnail)!) {
+                self.thumbnail.image = UIImage(data: data)
+            }
+        }
     }
     
 }
+

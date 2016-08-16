@@ -1,0 +1,5 @@
+github "Alamofire/Alamofire"
+github "SwiftyJSON/SwiftyJSON"    
+github "Thomvis/BrightFutures"
+github "rs/SDWebImage"
+github "realm/realm-cocoa"
