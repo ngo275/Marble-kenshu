@@ -591,7 +591,15 @@ ArticleTableViewCell.swiftのbindDataCellという関数を以下のようにし
         }
     }
     
-ArticleViewController側（呼び出し側）では以下のようにします。`class ArticleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {`と`ArticleViewController`の定義時にまとめて`TableViewDelegate`を書くことが可能ですが、なるべくそれぞれのDelegate単位で`extension`を使って分割していくようにします。また`// MARK: - UITableViewDataSource`とコメントをつける習慣もつけましょう。
+ArticleViewController側（呼び出し側）では以下のようにします。
+
+    class ArticleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+と`ArticleViewController`の定義時にまとめて`TableViewDelegate`を書くことが可能ですが、なるべくそれぞれのDelegate単位で`extension`を使って分割していくようにします。また
+    
+    // MARK: - UITableViewDataSource
+    
+とMARKのコメントをつける習慣もつけましょう。フォーマットを守りましょう。
 
     extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
     
@@ -891,12 +899,12 @@ ProtocolsというフォルダにStoryboardLoadable.swiftというファイル�
     // MARK - StoryboardLoadable
     extension UIViewController: StoryboardLoadable {}
 
-さきほどまでは巨大だった関数もこのようにスッキリします。このようにプロトコルを利用する方法を取り入れていきましょう。
+さきほどの関数もこのようにスッキリします。このようにプロトコルを利用する方法を取り入れていきましょう。
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-            let vc: ArticleDetailViewController = Utils.createViewController()
-            vc.article = articles![indexPath.row]
-            navigationController?.pushViewController(vc, animated: true)
+            let next: ArticleDetailViewController = Utils.createViewController()
+            next.article = articles![indexPath.row]
+            navigationController?.pushViewController(next, animated: true)
 
     }
 
