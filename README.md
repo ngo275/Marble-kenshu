@@ -701,6 +701,7 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
 
 これで記事一覧ページの表示完了です。
 
+![記事一覧完成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/20.png)
 
 ### 記事詳細ページの作成
 
