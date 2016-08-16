@@ -704,7 +704,7 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
 
 ![記事一覧完成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/21.png)
 
-参考にArticleViewController.swiftを載せておきます。
+参考にArticleViewController.swiftを載せておきます。`viewDidLoad`に`title = "MARBLE"`を書いておくといい感じにヘッダーが出ます。
 
     ▼ArticleViewController.swift
     
@@ -731,7 +731,7 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
         
         override func viewDidLoad() {
             super.viewDidLoad()
-            
+            title = "MARBLE"
             load()
             initTableView()
         }
