@@ -704,6 +704,94 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
 
 ![記事一覧完成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/21.png)
 
+参考にArticleViewController.swiftを載せておきます。
+
+    ▼ArticleViewController.swift
+    
+    import UIKit
+    import SwiftyJSON
+    import Alamofire
+    import Result
+    
+    class ArticleViewController: UIViewController {
+    
+        
+        private let viewmodel = ArticleViewModel()
+        private let apiManager: APIManager = APIManager.sharedInstance
+        private var articles: [Article]? {
+            get {
+                return viewmodel.articles
+            }
+            set(newValue) {
+                viewmodel.articles = newValue
+            }
+        }
+        
+        @IBOutlet weak var tableView: UITableView!
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            
+            load()
+            initTableView()
+        }
+    
+        override func didReceiveMemoryWarning() {
+            super.didReceiveMemoryWarning()
+            // Dispose of any resources that can be recreated.
+        }
+        
+        private func initTableView() {
+            tableView!.register(registerCell: ArticleTableViewCell.self)
+            tableView.rowHeight = UITableViewAutomaticDimension
+            tableView.estimatedRowHeight = 105.0
+        }
+        
+        private func load() {
+            let params: [String: AnyObject] = [
+                "search_type": "category",
+                "limit": 30,
+                //            "category_id": categoryId
+            ]
+            viewmodel.fetchArticleList(params)
+                .onSuccess { [weak self] data in
+                    self?.articles = data.1
+                    self?.tableView.reloadData()
+                    print(data.1)
+                }
+                .onFailure { [weak self] error in
+                    self?.showErrorAlert(error.localizedDescription, completion: nil)
+            }
+        }
+        
+        private func showErrorAlert(message: String, completion: ((UIAlertAction) -> Void)?) {
+            let alert = UIAlertController(title: "MARBLE",
+                                          message: message,
+                                          preferredStyle: UIAlertControllerStyle.Alert
+            )
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: completion))
+            presentViewController(alert, animated: true, completion: nil)
+        }
+    
+    }
+    
+    extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
+        
+        // return the number of tableCells
+        func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return articles?.count ?? 0
+        }
+        // draw the tableCells
+        func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+            let cell: ArticleTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+            cell.bindDataCell(articles![indexPath.row])
+            return cell
+        }
+        
+    }
+
+
 ### 記事詳細ページの作成
 
 Storyboardsの中にあるArticleDetail.storyboardを編集していきます。この中にViewControllerを挿入して、ViewControllerというフォルダの中にあるArticleDetailViewControllerと関連付けをします。
@@ -714,7 +802,16 @@ Storyboardsの中にあるArticleDetail.storyboardを編集していきます。
 
 ![textViewの追加](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/23.png)
 
-ArticleDetailViewControllerと先ほど追加したtextViewを関連付けます。基本的にStoryboardにあるものはすべてコードでも関連付けをしないといけないと思っておいて良いでしょう。ArticleDetailViewControllerは以下のようになります。
+ArticleDetailViewControllerと先ほど追加したtextViewを関連付けます。基本的にStoryboardにあるものはすべてコードでも関連付けをしないといけないと思っておいて良いでしょう。
+Identifierもつけておきます。
+
+![identifier](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/25.png)
+
+遷移してきた時に最初にStoryboardのどれに初めにアクセスすればいいのかを伝えるために以下のようにInitialのチェックをつけます。
+
+![initial設定](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/26.png)
+
+ArticleDetailViewControllerは以下のようになります。
     
     ▼ArticleDetailViewController.swift
     
@@ -744,4 +841,21 @@ ArticleDetailViewControllerと先ほど追加したtextViewを関連付けます
     }
 
 あとはArticleViewControllerから遷移して、その際にArticleを受け渡せばよいです。
+`tableView`にはCellをタップした時のアクションを実装するfunctionが準備されています（delegate）のでそれを利用します。
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let storyboard: UIStoryboard = UIStoryboard(name: "ArticleDetail", bundle: nil)
+        if let next: ArticleDetailViewController = storyboard.instantiateViewControllerWithIdentifier("ArticleDetail") as? ArticleDetailViewController {
+            next.article = articles![indexPath.row]
+            navigationController?.pushViewController(next, animated: true)
+        }
+    }
+    
+このfuctionを遷移元であるArticleViewControllerの`extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {`の中に記述しましょう。ここでは、まず遷移先のStoryboardをインスタンス化して、それに対応するViewControllerを取得、そこに遷移する、という流れです。その時に一緒に遷移先の`article`というプロパティにタップされたarticleを渡しています。タップされたCellは`indexPath.row`でアクセスできます。
+
+ここまでくるとタップすると遷移できているはずです。
+
+
+
+
 
