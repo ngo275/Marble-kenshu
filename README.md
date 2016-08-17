@@ -13,7 +13,8 @@ ViewControllerはUIViewControllerを継承しており、あるViewを管理し�
 
 ## 以下キュレーションアプリ（MARBLE）作成のチュートリアル
 
-### プロジェクト作成
+
+## プロジェクト作成
 Xcodeの新規プロジェクトで、Single View Applicationを選択してプロジェクト名を入力します。ここではtest1というプロジェクト名にしてあります。プロジェクトの中身はフォルダを作成してわかりやすく構成しましょう。新しくフォルダを追加するには以下の画面のように右クリックからNew Groupを作成するところから行います。
 
 ![フォルダーの作成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/1.png)
@@ -30,7 +31,7 @@ Storyboardは一つのファイルに詰め込むとチームで開発してい�
 
 ![xibファイルの作成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/3.png)
 
-### Storyboardで準備
+## Storyboardで準備
 
 まず、記事一覧ページを表示できるところまでを目安に進めていきます。StoryboardとArticleViewControllerを関連付けて、Editor -> Embed in -> Navigation ControllerでNavigationControllerをつけます。
 
@@ -80,7 +81,7 @@ tableViewという変数をArticleViewControllerに追加します。
 ![TableViewという変数をArticleViewControllerに追加](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/18.png)
 
 
-### TableViewCellの作成
+## TableViewCellの作成
 
 先ほど作成したArticleTableViewCell.xibファイルを開いてそこにTableViewCellを挿入します。この中に記事一覧のセルに必要なものを挿入します。Image Viewとlabelで作っていきます。Constraintsの設定をしていきます。UIImageViewのサイズを80×80にして上、左からの位置（offset）を8にしておきます。タイトルや日付もそれぞれの間隔を8にして設定していきます。
 
@@ -104,7 +105,7 @@ ArticleTableViewCell.swiftとUIView（Cellには入っているViewパーツ）�
 ![関連付け](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/17.png)
 
 
-### Carthageの導入
+## Carthageの導入
 
 Swiftはライブラリを追加して機能を拡張して実装していきます。そのライブラリ管理を行ってくれるツールを導入します。そのツールがCarthage（カルタゴもしくはカーセッジ、どちらでも良いです。Candleではカルタゴと呼んでいます）になります。他にもCocoa Podというツールもありますが、ここではCarthageをお勧めしてます。
 `http://qiita.com/yutat93/items/97fe9bc2bf2e97da7ec1`
@@ -125,7 +126,7 @@ realm-cocoa: Realmという永続的な記憶システムを利用可能にし�
 これらのライブラリを利用する時は、`import UIKit`のようにファイルの先頭に利用するライブラリをインポートする宣言をするだけです。
 
 
-### APIの利用
+## APIの利用
 
 アプリ開発では、記事のデータをAPIを用いて行います。非常に簡単に説明すると、あるURLを叩くとjson形式でデータを取得できる、という仕組みです。CandleのキュレーションサービスであるMARBLEのAPIを見ていきます。
 
@@ -196,7 +197,7 @@ limit = 2にした時の出力結果が以下のようになっております�
     }
     
     
-### Cellを表示してみる
+## Cellを表示してみる
 
 まず、ArticleViewControllerにおいて`UITableViewDelegate`, `UITableViewDataSource`の実装をしていきます。
 
@@ -301,7 +302,7 @@ limit = 2にした時の出力結果が以下のようになっております�
 ![テスト画面](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/19.png)
 
 
-### APIを取得してみる
+## APIを取得してみる
 
 Utilsという新しいグループを作成して、その中にAPI通信や共通のメソッドをまとめていきます。まずNew Groupから新しいグループ（Utils）を作成
 して、その中にAPIManager.swiftとAPIUrl.swiftを新規作成します。この時、テンプレートはcocoa touchではなくswiftで良いです。APIUrl.swiftにはAPIのURLをまとめます。利用する際にはクエリパラメタ（検索する記事数等）の指定をしないといけません。
@@ -806,7 +807,7 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
     }
 
 
-### 記事詳細ページの作成
+## 記事詳細ページの作成
 
 Storyboardsの中にあるArticleDetail.storyboardを編集していきます。この中にViewControllerを挿入して、ViewControllerというフォルダの中にあるArticleDetailViewControllerと関連付けをします。
 
@@ -908,7 +909,7 @@ ProtocolsというフォルダにStoryboardLoadable.swiftというファイル�
 
     }
 
-### Tabの利用
+## Tabの利用
 
 今はまだタブがなく記事一覧ページがいきなり出てくるだけなのでタブを取り入れてコンテンツを増やしていきたいと思います。
 
@@ -986,4 +987,9 @@ TabBarItemを`Article.storyboard`に挿入します。
 
 ![ArticleStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/33.png)
 
+他に必要なTab（Search, Like, Mypage）も付け足します。Storyboard、ViewController、ContainerViewControllerを作成して`MainTabBarController`に追加分のViewControllerを書いていきます。
+
+手順をもう一度簡単にまとめると以下のようになります。
+
+新規作成でStoryboardを作る。`ViewController`を追加、ツールバーの`Editor/EmbedIn/NavigationController`でNavigationControllerを追加します。今できた2つのViewControllerのそれぞれに対応するViewControllerを作成します（e.g. `Search.storyboard`, `SearchViewController.swift`, `SearchContainerViewController.swift`）。この時StoryboardとViewControllerの関連付け、`IsInitialViewController`の設定、NavigationControllerにTabBarItemの追加を忘れないようにしましょう。
 
