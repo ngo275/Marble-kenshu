@@ -975,5 +975,15 @@ Main.storyboardにTabBarControllerを追加します。デフォルトで2つの
 
 ![デモ](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/30.png)
 
-今のところTabのアイコンが変なのでここの編集をしていきます。
+今のところTabのアイコンが変なのでここの編集をしていきます。アイコン等の画像は基本的に`Assets.xcassets`というフォルダがデフォルトで存在するのでそこに追加していきます。（ホームなどの画像はMARBLEのRsourcesというフォルダに入っていると思うのでそこからダウンロードすると良いでしょう。）1x, 2x, 3xは解像度が異なります。AppIconを設定することでアプリのアイコンを登録できます。
+
+![xcassetを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/32.png)
+
+TabBarItemを`Article.storyboard`に挿入します。
+![ArticleStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/31.png)
+
+さきほど登録したホームアイコンをStoryboardで設定します。デフォルトで備わっているアイコンであればSystem Iconから選択できます。
+
+![ArticleStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/33.png)
+
 
