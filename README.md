@@ -912,5 +912,11 @@ ProtocolsというフォルダにStoryboardLoadable.swiftというファイル�
 
 今はまだタブがなく記事一覧ページがいきなり出てくるだけなのでタブを取り入れてコンテンツを増やしていきたいと思います。
 
+Main.storyboardにTabBarControllerを追加します。デフォルトで2つのViewControllerがついてきますが、これらを削除します。NavigationControllerとArticleViewControllerをコピーしてこれらも削除します。次にArticle.storyboardを作成し、その中に先ほどコピーした2つのViewControllerをペーストします。
 
+![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/27.png)
+
+
+
+![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/28.png)
 
