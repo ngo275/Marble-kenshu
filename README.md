@@ -991,5 +991,13 @@ TabBarItemを`Article.storyboard`に挿入します。
 
 手順をもう一度簡単にまとめると以下のようになります。
 
-新規作成でStoryboardを作る。`ViewController`を追加、ツールバーの`Editor/EmbedIn/NavigationController`でNavigationControllerを追加します。今できた2つのViewControllerのそれぞれに対応するViewControllerを作成します（e.g. `Search.storyboard`, `SearchViewController.swift`, `SearchContainerViewController.swift`）。この時StoryboardとViewControllerの関連付け、`IsInitialViewController`の設定、NavigationControllerにTabBarItemの追加を忘れないようにしましょう。
+新規作成でStoryboardを作ります。`ViewController`を追加、ツールバーの`Editor/EmbedIn/NavigationController`でNavigationControllerを追加します。今できた2つのViewControllerのそれぞれに対応するViewControllerを作成します（e.g. `Search.storyboard`, `SearchViewController.swift`, `SearchContainerViewController.swift`）。この時StoryboardとViewControllerの関連付け、`IsInitialViewController`の設定、NavigationControllerにTabBarItemの追加を忘れないようにしましょう。
+
+![タブ完成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/34.png)
+
+
+## お気に入り機能の実装
+
+記事詳細ページに適当なボタンを設置してそれをタップするとLikeでき、Likeページに行くとLikeした記事の一覧を見れる、というお気に入り機能を実装します。
+
 
