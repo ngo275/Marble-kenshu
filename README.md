@@ -950,4 +950,30 @@ Main.storyboardにTabBarControllerを追加します。デフォルトで2つの
 
 次は、`Main.storyboard`に対応する`ViewController`を作成します。`MainTabBarController`を先ほどの`ContainerViewController`のディレクトリに作成します。`CocoatouchClass`から`UITabBarController`を選択すると良いです。そしてStoryboardで関連付けもしておきましょう。
 
+![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/29.png)
+
+`MainTabBarController`にまず、イニシャライザを記述します。
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.tabBar.translucent = true
+    }
+    
+次に、viewDidLoadでTabに入れるべき`Viewcontroller`を指定します。
+
+    override func viewDidLoad() {
+    
+        let articleStoryboard = UIStoryboard(name: "Article", bundle: nil)
+        let articleViewController = articleStoryboard.instantiateInitialViewController() as! ArticleContainerViewController
+        let viewControllers = [articleViewController]
+        self.setViewControllers(viewControllers, animated: false)
+        super.viewDidLoad()
+    
+    }
+
+`super.viewDidLoad`の位置に注意しましょう。
+
+![デモ](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/30.png)
+
+今のところTabのアイコンが変なのでここの編集をしていきます。
 
