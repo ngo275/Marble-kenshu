@@ -922,6 +922,32 @@ Main.storyboardにTabBarControllerを追加します。デフォルトで2つの
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/28.png)
 
+`ArticleContainerViewController`は以下のように少しだけメソッドを付け足しておきます。
 
+    import UIKit
+
+    class ArticleContainerViewController: UINavigationController {
+    
+        var statusBarStyle: UIStatusBarStyle = UIStatusBarStyle.Default
+        
+        required init?(coder aDecoder: NSCoder) {
+            super.init(coder: aDecoder)
+        }
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+        }
+    
+        override func didReceiveMemoryWarning() {
+            super.didReceiveMemoryWarning()
+        }
+        
+        override func preferredStatusBarStyle() -> UIStatusBarStyle {
+            return statusBarStyle
+        }
+    
+    }
+
+次は、`Main.storyboard`に対応する`ViewController`を作成します。`MainTabBarController`を先ほどの`ContainerViewController`のディレクトリに作成します。`CocoatouchClass`から`UITabBarController`を選択すると良いです。そしてStoryboardで関連付けもしておきましょう。
 
 
