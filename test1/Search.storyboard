@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="fBC-rD-fJq">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--Search View Controller-->
+        <scene sceneID="qpn-Gm-Oko">
+            <objects>
+                <viewController id="9zn-dN-ZR2" customClass="SearchViewController" customModule="test1" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="avc-G6-ycC"/>
+                        <viewControllerLayoutGuide type="bottom" id="HhG-8N-1wA"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="nI9-v2-9mz">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="YG4-i1-clI"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fWP-oN-ka6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1291" y="301"/>
+        </scene>
+        <!--検索-->
+        <scene sceneID="GCx-lv-Ze5">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fBC-rD-fJq" customClass="SearchContainerViewController" customModule="test1" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="検索" image="search" id="bRL-si-ucx"/>
+                    <toolbarItems/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cCU-gQ-Ac0">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="9zn-dN-ZR2" kind="relationship" relationship="rootViewController" id="nNG-Tb-hLf"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QkN-Hp-bbu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="479" y="301"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="search" width="32" height="32"/>
+    </resources>
+</document>

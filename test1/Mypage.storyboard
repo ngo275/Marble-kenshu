@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="3zr-WZ-QCm">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--Mypage View Controller-->
+        <scene sceneID="rew-u8-kMY">
+            <objects>
+                <viewController id="POS-N5-JjA" customClass="MypageViewController" customModule="test1" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9Wr-pC-AOU"/>
+                        <viewControllerLayoutGuide type="bottom" id="l9p-mk-ve7"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Guv-zH-6vr">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="4Kz-oW-oHY"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3s4-qD-p3M" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1328" y="-92"/>
+        </scene>
+        <!--マイページ-->
+        <scene sceneID="tgh-Ml-CN0">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="3zr-WZ-QCm" customClass="MypageContainerViewController" customModule="test1" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="マイページ" image="mypage" id="4Yv-Rj-cKJ"/>
+                    <toolbarItems/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="BCr-J5-MpV">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="POS-N5-JjA" kind="relationship" relationship="rootViewController" id="QOm-Qt-P0s"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hhw-qL-nEL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="516" y="-92"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="mypage" width="32" height="32"/>
+    </resources>
+</document>

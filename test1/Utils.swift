@@ -16,5 +16,10 @@ class Utils {
         return NSError(domain: domain, code: 100, userInfo: [NSLocalizedDescriptionKey: message])
     }
     
+    static func createViewController<T: StoryboardLoadable>() -> T {
+        let sb = UIStoryboard(name: T.storyboardName, bundle: nil)
+        return sb.instantiateInitialViewController() as! T
+    }
+    
 }
 

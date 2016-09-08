@@ -29,7 +29,7 @@ class ArticleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        title = "MARBLE"
         load()
         initTableView()
     }
@@ -76,6 +76,8 @@ class ArticleViewController: UIViewController {
 
 extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
     
+    // MARK: - UITableViewDataSource
+    
     // return the number of tableCells
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return articles?.count ?? 0
@@ -87,12 +89,19 @@ extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     // action when a cell is tapped
-//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let next: ArticleDetailViewController = Utils.createViewController()
+        next.article = articles![indexPath.row]
+        navigationController?.pushViewController(next, animated: true)
 //        let storyboard: UIStoryboard = UIStoryboard(name: "ArticleDetail", bundle: nil)
 //        if let next: ArticleDetailViewController = storyboard.instantiateViewControllerWithIdentifier("ArticleDetail") as? ArticleDetailViewController {
 //            next.article = articles![indexPath.row]
 //            navigationController?.pushViewController(next, animated: true)
 //        }
-//    }
+    }
 }
+
+// MARK - StoryboardLoadable
+extension UIViewController: StoryboardLoadable {}
+
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ojb-VA-idd">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--Like View Controller-->
+        <scene sceneID="wU8-mZ-Hf7">
+            <objects>
+                <viewController id="8es-ww-iMc" customClass="LikeViewController" customModule="test1" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FGr-4a-diF"/>
+                        <viewControllerLayoutGuide type="bottom" id="EoI-Bh-lke"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="0ot-Ob-snC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="9hD-32-hV4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hxj-9Z-ZUB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1460" y="-62"/>
+        </scene>
+        <!--LIKE-->
+        <scene sceneID="W6H-VL-Kob">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ojb-VA-idd" customClass="LikeContainerViewController" customModule="test1" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="LIKE" image="like" id="pw9-w3-DCN"/>
+                    <toolbarItems/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="HeX-Ct-zjv">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="8es-ww-iMc" kind="relationship" relationship="rootViewController" id="CAD-X3-bha"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="t3C-sB-DRY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="648" y="-62"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="like" width="32" height="32"/>
+    </resources>
+</document>
