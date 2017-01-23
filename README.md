@@ -29,7 +29,7 @@ Storyboardは一つのファイルに詰め込むとチームで開発してい�
 
 ![Storyboardの作成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/4.png)
 
-記事一覧ページはTableViewを利用して表示しますが、Cellは、コードで生成せずに、自分でGUIを利用して作成します。Viewパーツ用のファイル（これをXib（ニブ）ファイルと呼びます）にカスタムビューを作成していきます。Xibファイルは以下の画面から作成します。基本的なファイルの拡張子は.swiftになるのですが、Storyboardの拡張子は.storyboard、Xibファイルの拡張子は.xibになります。.plistという拡張子を持つものはプロジェクトに関する設定を記述しているものです。ATSなどの設定でいじることになるでしょう。AppleはHTTP通信に関して厳しく規制を始めており、2017年までにHTTP通信を禁止すると宣言しています。HTTP通信を許可する設定をATSという欄をいじって行います。
+記事一覧ページはTableViewを利用して表示しますが、Cellは、コードで生成せずに、自分でGUIを利用して作成します。Viewパーツ用のファイル（これをXib（ニブ）ファイルと呼びます）にカスタムビューを作成していきます。Xibファイルは以下の画面から作成します。基本的なファイルの拡張子は.swiftになるのですが、Storyboardの拡張子は.storyboard、Xibファイルの拡張子は.xibになります。.plistという拡張子を持つものはプロジェクトに関する設定を記述しているものです。ATSなどの設定でいじることになるでしょう。AppleはHTTP通信に関して厳しく規制を始めており、HTTP通信を許可する設定をATSという欄をいじって行います。
 
 ![xibファイルの作成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/3.png)
 
@@ -111,8 +111,8 @@ ArticleTableViewCell.swiftとUIView（Cellには入っているViewパーツ）�
 
 Swiftはライブラリを追加して機能を拡張して実装していきます。そのライブラリ管理を行ってくれるツールを導入します。そのツールがCarthage（カルタゴもしくはカーセッジ、どちらでも良いです。Candleではカルタゴと呼んでいます）になります。他にもCocoa Podというツールもありますが、ここではCarthageをお勧めしてます。
 `http://qiita.com/yutat93/items/97fe9bc2bf2e97da7ec1`
-これが非常にわかりやすくまとまっているので参考にしてインストールしてください。以下の5つをCartfileに書き込んで設定します。
-
+これが非常にわかりやすくまとまっているので参考にしてインストールしてください。Terminalでプロジェクト場所に行き、以下の5つを新しく作成したCartfileに書き込んで`carthage update --platform iOS --no-use-binaries`を実行します。
+  
     github "Alamofire/Alamofire"
     github "SwiftyJSON/SwiftyJSON"    
     github "Thomvis/BrightFutures"
