@@ -112,18 +112,20 @@ ArticleTableViewCell.swiftとUIView（Cellには入っているViewパーツ）�
 Swiftはライブラリを追加して機能を拡張して実装していきます。そのライブラリ管理を行ってくれるツールを導入します。そのツールがCarthage（カルタゴもしくはカーセッジ、どちらでも良いです。Candleではカルタゴと呼んでいます）になります。他にもCocoa Podというツールもありますが、ここではCarthageをお勧めしてます。
 `http://qiita.com/yutat93/items/97fe9bc2bf2e97da7ec1`
 これが非常にわかりやすくまとまっているので参考にしてインストールしてください。Terminalでプロジェクト場所に行き、以下の5つを新しく作成したCartfileに書き込んで`carthage update --platform iOS --no-use-binaries`を実行します。
-  
+
+
     github "Alamofire/Alamofire"
     github "SwiftyJSON/SwiftyJSON"    
     github "Thomvis/BrightFutures"
     github "rs/SDWebImage"
     github "realm/realm-cocoa"
 
-Alamofire: API通信を便利に行えるライブラリ。APIに関して次で説明します。
-SwiftyJson: JSONの取り扱いを簡単に行えるライブラリ。
-BrightFutures: プロミスの取り扱いを簡単にするライブラリ。
-SDWebImage: 画像の非同期処理を行うライブラリ。記事一覧をスクロールする時に動作が重くなるのを防げます。（Kingfisherに置き換えたい。）
-realm-cocoa: Realmという永続的な記憶システムを利用可能にします。NSUserDefaultsよりも複雑なデータを保存できます。
+    Alamofire: API通信を便利に行えるライブラリ。APIに関して次で説明します。
+    SwiftyJson: JSONの取り扱いを簡単に行えるライブラリ。
+    BrightFutures: プロミスの取り扱いを簡単にするライブラリ。
+    SDWebImage: 画像の非同期処理を行うライブラリ。記事一覧をスクロールする時に動作が重くなるのを防げます。（Kingfisherに置き換えたい。）
+    realm-cocoa: Realmという永続的な記憶システムを利用可能にします。NSUserDefaultsよりも複雑なデータを保存できます。
+
 
 これらのライブラリを利用する時は、`import UIKit`のようにファイルの先頭に利用するライブラリをインポートする宣言をするだけです。
 
