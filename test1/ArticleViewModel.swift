@@ -17,9 +17,9 @@ class ArticleViewModel: NSObject {
     //    var articles: [[String: String?]] = []
     //    let table = UITableView()
     //    var max: Int = 0
-    private let apiManager = APIManager.sharedInstance
+    fileprivate let apiManager = APIManager.sharedInstance
     
-    func fetchArticleList(params: [String: AnyObject]) -> Future<(Int,[Article]), NSError>  {
+    func fetchArticleList(_ params: [String: AnyObject]) -> Future<(Int,[Article]), NSError>  {
         let serializer = ArticleSerializer()
         let url = APIUrl.articleList
         return apiManager.get(url, params: params, serializer: serializer)

@@ -12,7 +12,7 @@ class MainTabBarController: UITabBarController {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.tabBar.translucent = true
+        self.tabBar.isTranslucent = true
     }
     
     override func viewDidLoad() {

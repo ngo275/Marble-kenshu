@@ -10,7 +10,7 @@ import UIKit
 
 class Utils {
     
-    static func createErrorObject(message: String, code: Int = 100) -> NSError {
+    static func createErrorObject(_ message: String, code: Int = 100) -> NSError {
         let domain = "jp.co.candle.app.marble"
         
         return NSError(domain: domain, code: 100, userInfo: [NSLocalizedDescriptionKey: message])

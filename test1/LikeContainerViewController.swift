@@ -10,7 +10,7 @@ import UIKit
 
 class LikeContainerViewController: UINavigationController {
 
-    var statusBarStyle: UIStatusBarStyle = UIStatusBarStyle.Default
+    var statusBarStyle: UIStatusBarStyle = UIStatusBarStyle.default
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -27,7 +27,7 @@ class LikeContainerViewController: UINavigationController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+    override var preferredStatusBarStyle : UIStatusBarStyle {
         //        print("preferredStatusBarStyle: \(statusBarStyle)")
         return statusBarStyle
     }

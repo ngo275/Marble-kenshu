@@ -15,17 +15,17 @@ class APIManager: NSObject {
     
     static let sharedInstance = APIManager()
     
-    func get<T: ResponseSerializerType>(url: URLStringConvertible, params: [String: AnyObject], serializer: T) -> Future<T.SerializedObject, T.ErrorObject> {
+    func get<T: ResponseSerializerType>(_ url: URLStringConvertible, params: [String: AnyObject], serializer: T) -> Future<T.SerializedObject, T.ErrorObject> {
         let promise = Promise<T.SerializedObject, T.ErrorObject>()
         
         Alamofire.request(.GET, url, parameters: params)
             .validate()
             .response(responseSerializer: serializer) { response in
                 switch response.result {
-                case .Success(let r):
+                case .success(let r):
                     promise.success(r)
                     
-                case .Failure(let error):
+                case .failure(let error):
                     print(error)
                     promise.failure(error)
                 }

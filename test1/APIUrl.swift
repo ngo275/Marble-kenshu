@@ -9,7 +9,7 @@
 import Foundation
 
 class APIUrl {
-    private static let host = "https://api.topicks.jp"
+    fileprivate static let host = "https://api.topicks.jp"
     
     static var articleList: String {
         return host + "/api/v1/articles/list.json"

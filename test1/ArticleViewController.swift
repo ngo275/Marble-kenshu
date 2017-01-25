@@ -14,9 +14,9 @@ import Result
 class ArticleViewController: UIViewController {
 
     
-    private let viewmodel = ArticleViewModel()
-    private let apiManager: APIManager = APIManager.sharedInstance
-    private var articles: [Article]? {
+    fileprivate let viewmodel = ArticleViewModel()
+    fileprivate let apiManager: APIManager = APIManager.sharedInstance
+    fileprivate var articles: [Article]? {
         get {
             return viewmodel.articles
         }
@@ -39,16 +39,16 @@ class ArticleViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    private func initTableView() {
+    fileprivate func initTableView() {
         tableView!.register(registerCell: ArticleTableViewCell.self)
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 105.0
     }
     
-    private func load() {
+    fileprivate func load() {
         let params: [String: AnyObject] = [
-            "search_type": "category",
-            "limit": 30,
+            "search_type": "category" as AnyObject,
+            "limit": 30 as AnyObject,
             //            "category_id": categoryId
         ]
         viewmodel.fetchArticleList(params)
@@ -62,14 +62,14 @@ class ArticleViewController: UIViewController {
         }
     }
     
-    private func showErrorAlert(message: String, completion: ((UIAlertAction) -> Void)?) {
+    fileprivate func showErrorAlert(_ message: String, completion: ((UIAlertAction) -> Void)?) {
         let alert = UIAlertController(title: "MARBLE",
                                       message: message,
-                                      preferredStyle: UIAlertControllerStyle.Alert
+                                      preferredStyle: UIAlertControllerStyle.alert
         )
         
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: completion))
-        presentViewController(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: completion))
+        present(alert, animated: true, completion: nil)
     }
 
 }
@@ -79,17 +79,17 @@ extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
     // MARK: - UITableViewDataSource
     
     // return the number of tableCells
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return articles?.count ?? 0
     }
     // draw the tableCells
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: ArticleTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
         cell.bindDataCell(articles![indexPath.row])
         return cell
     }
     // action when a cell is tapped
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let next: ArticleDetailViewController = Utils.createViewController()
         next.article = articles![indexPath.row]
         navigationController?.pushViewController(next, animated: true)

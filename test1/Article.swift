@@ -33,7 +33,7 @@ struct Article {
     let thumbNormal: String
     let thumbOriginal: String
     let thumbStatus: Int
-    let thumbUpdated: NSDate
+    let thumbUpdated: Date
     let userData: User
     
     init(json: JSON) {
@@ -52,7 +52,7 @@ struct Article {
         thumbNormal = article["thumb_normal"].stringValue
         thumbOriginal = article["thumb_original"].stringValue
         thumbStatus = article["thumb_status"].intValue
-        thumbUpdated = NSDate.dateFromString(article["thumb_updated"].stringValue) ?? NSDate()
+        thumbUpdated = Date.dateFromString(article["thumb_updated"].stringValue) ?? Date()
         userData = User(json: json["User"])
         
     }
@@ -91,24 +91,24 @@ struct ArticleSerializer: ResponseSerializerType {
     typealias SerializedObject = (max: Int, articles: [Article])
     typealias ErrorObject = NSError
     
-    var serializeResponse: (NSURLRequest?, NSHTTPURLResponse?, NSData?, NSError?) -> Result<SerializedObject, ErrorObject> = { (request, response, data, error) in
+    var serializeResponse: (URLRequest?, HTTPURLResponse?, Data?, NSError?) -> Result<SerializedObject, ErrorObject> = { (request, response, data, error) in
         
         if let error = error {
-            return Result.Failure(error)
+            return Result.failure(error)
         }
         
         guard let responseData = data else {
-            return Result.Failure(Utils.createErrorObject("データの取得に失敗しました"))
+            return Result.failure(Utils.createErrorObject("データの取得に失敗しました"))
         }
         
         let json = JSON(data: responseData)
         
         if let message = json["message"].string {
-            return Result.Failure(Utils.createErrorObject(message))
+            return Result.failure(Utils.createErrorObject(message))
         }
         
         let max = json["meta"]["count"].int ?? 0
         let articles = json["results"].arrayValue.map { Article(json: $0) }
-        return Result.Success((max, articles))
+        return Result.success((max, articles))
     }
 }

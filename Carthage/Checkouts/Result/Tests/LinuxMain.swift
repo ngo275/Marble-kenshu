@@ -1,7 +1,8 @@
 import XCTest
 
-@testable import ResultTestSuite
+@testable import ResultTests
 
 XCTMain([
   testCase(ResultTests.allTests),
+  testCase(NoErrorTests.allTests),
 ])

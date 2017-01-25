@@ -22,7 +22,7 @@ class ArticleDetailViewController: UIViewController {
         super.viewDidLoad()
         if let article = article {
             text.text = article.body
-            text.editable = false
+            text.isEditable = false
         }
     }
 
