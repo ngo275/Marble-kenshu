@@ -9,11 +9,21 @@
 import UIKit
 import BrightFutures
 import SwiftyJSON
-import Alamofire
+import APIKit
+import WebImage
 
-class ArticleViewModel: NSObject {
+class ArticleViewModel {
     
-    var articles: [Article]?
+    var max: Int = 0
+    var articles = [Article]()
+    var operations = [SDWebImageOperation?]()
+    
+    func fetchArticles(params: [String: Any], isReset: Bool = false) -> Future<GetArticlesRequest.Response, SessionTaskError> {
+        
+        return APIManager.send(request: GetArticlesRequest())
+    }
+    
+    
     //    var articles: [[String: String?]] = []
     //    let table = UITableView()
     //    var max: Int = 0

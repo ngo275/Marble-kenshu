@@ -8,15 +8,13 @@
 
 import UIKit
 import SwiftyJSON
-import Alamofire
 import Result
 
 class ArticleViewController: UIViewController {
 
-    
     fileprivate let viewmodel = ArticleViewModel()
     //fileprivate let apiManager: APIManager = APIManager.sharedInstance
-    fileprivate var articles: [Article]? {
+    fileprivate var articles: [Article] {
         get {
             return viewmodel.articles
         }
@@ -40,7 +38,7 @@ class ArticleViewController: UIViewController {
     }
     
     fileprivate func initTableView() {
-        tableView!.register(registerCell: ArticleTableViewCell.self)
+        tableView.register(registerCell: ArticleTableViewCell.self)
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 105.0
     }
@@ -51,7 +49,7 @@ class ArticleViewController: UIViewController {
             "limit": 30 as AnyObject,
             //            "category_id": categoryId
         ]
-        /*viewmodel.fetchArticleList(params)
+        viewmodel.fetchArticles(params: params)
             .onSuccess { [weak self] data in
                 self?.articles = data.1
                 self?.tableView.reloadData()
@@ -59,7 +57,7 @@ class ArticleViewController: UIViewController {
             }
             .onFailure { [weak self] error in
                 self?.showErrorAlert(error.localizedDescription, completion: nil)
-        }*/
+        }
     }
     
     fileprivate func showErrorAlert(_ message: String, completion: ((UIAlertAction) -> Void)?) {
@@ -80,18 +78,18 @@ extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
     
     // return the number of tableCells
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articles?.count ?? 0
+        return articles.count
     }
     // draw the tableCells
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: ArticleTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-        cell.bindDataCell(articles![indexPath.row])
+        cell.bindDataCell(articles[indexPath.row])
         return cell
     }
     // action when a cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let next: ArticleDetailViewController = Utils.createViewController()
-        next.article = articles![indexPath.row]
+        next.article = articles[indexPath.row]
         navigationController?.pushViewController(next, animated: true)
 //        let storyboard: UIStoryboard = UIStoryboard(name: "ArticleDetail", bundle: nil)
 //        if let next: ArticleDetailViewController = storyboard.instantiateViewControllerWithIdentifier("ArticleDetail") as? ArticleDetailViewController {
