@@ -13,7 +13,7 @@ import Alamofire
 
 class ArticleDetailViewController: UIViewController {
 
-    let apiManager: APIManager = APIManager.sharedInstance
+    //let apiManager: APIManager = APIManager.sharedInstance
     var article: Article?
     
     @IBOutlet weak var text: UITextView!

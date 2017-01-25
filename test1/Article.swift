@@ -86,7 +86,7 @@ struct Article {
 //    }
 }
 
-struct ArticleSerializer: ResponseSerializerType {
+/*struct ArticleSerializer: ResponseSerializerType {
     
     typealias SerializedObject = (max: Int, articles: [Article])
     typealias ErrorObject = NSError
@@ -111,4 +111,4 @@ struct ArticleSerializer: ResponseSerializerType {
         let articles = json["results"].arrayValue.map { Article(json: $0) }
         return Result.success((max, articles))
     }
-}
+}*/

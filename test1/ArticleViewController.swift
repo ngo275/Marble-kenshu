@@ -15,7 +15,7 @@ class ArticleViewController: UIViewController {
 
     
     fileprivate let viewmodel = ArticleViewModel()
-    fileprivate let apiManager: APIManager = APIManager.sharedInstance
+    //fileprivate let apiManager: APIManager = APIManager.sharedInstance
     fileprivate var articles: [Article]? {
         get {
             return viewmodel.articles
@@ -51,7 +51,7 @@ class ArticleViewController: UIViewController {
             "limit": 30 as AnyObject,
             //            "category_id": categoryId
         ]
-        viewmodel.fetchArticleList(params)
+        /*viewmodel.fetchArticleList(params)
             .onSuccess { [weak self] data in
                 self?.articles = data.1
                 self?.tableView.reloadData()
@@ -59,7 +59,7 @@ class ArticleViewController: UIViewController {
             }
             .onFailure { [weak self] error in
                 self?.showErrorAlert(error.localizedDescription, completion: nil)
-        }
+        }*/
     }
     
     fileprivate func showErrorAlert(_ message: String, completion: ((UIAlertAction) -> Void)?) {
