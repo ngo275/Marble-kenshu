@@ -267,7 +267,8 @@ limit = 2にした時の出力結果が以下のようになっております�
 
 ここでbindDataCellのひな形を作成しておきます。これを利用するには上の`CellForRowAtIndexPath`の中で`cell.bindDataCell()`とかくだけです。
 
-    ▼ArticleTableViewCell.swift
+
+ArticleTableViewCell.swift
 
     import UIKit
 
@@ -311,8 +312,10 @@ limit = 2にした時の出力結果が以下のようになっております�
             guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
             guard let thumbnail = try? Data(contentsOf: thumbnailURL) else { return }
             thumbnail.image = UIImage(data: thumbnail)
+
         }
     }
+
 
 
 起動して、以下の画面のようになっていれば正しくできています。
