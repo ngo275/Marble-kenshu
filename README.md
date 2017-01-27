@@ -119,6 +119,7 @@ Swiftはライブラリを追加して機能を拡張して実装していきま
     github "Thomvis/BrightFutures"
     github "rs/SDWebImage"
     github "realm/realm-cocoa"
+    github "ishkawa/APIKit" ~> 3.0
 
 Alamofire: API通信を便利に行えるライブラリ。APIに関して次で説明します。
 
@@ -130,6 +131,7 @@ SDWebImage: 画像の非同期処理を行うライブラリ。記事一覧を�
 
 realm-cocoa: Realmという永続的な記憶システムを利用可能にします。NSUserDefaultsよりも複雑なデータを保存できます。
 
+APIKit: API通信を便利に行えるライブラリ。APIに関して次で説明します。Alamofireから移行するつもりです。
 
 これらのライブラリを利用する時は、`import UIKit`のようにファイルの先頭に利用するライブラリをインポートする宣言をするだけです。
 
