@@ -293,15 +293,25 @@ limit = 2にした時の出力結果が以下のようになっております�
         func bindDataCell() {
             // 引数にArticleオブジェクトを受け取って、cellの作成を行います.
             // 現状まだ引数をいれずに適当な値を入れています.
-            self.title.text = "test"
-            self.date.text = "date"
-            self.desc.text = "記事の説明です"
-            self.user.text = "user'
-            if let thumbnail: String = "https://i.vimeocdn.com/portrait/58832_300x300" {
-                if let data = NSData(contentsOfURL: NSURL(string: thumbnail)!) {
-                    self.thumbnail.image = UIImage(data: data)
+            title.text = "test"
+            date.text = "date"
+            desc.text = "記事の説明です"
+            user.text = "user'
+            
+            // 画像の描画に関して
+            // 1, if let構文で書くとき
+            /*
+            if let thumbnail = "https://i.vimeocdn.com/portrait/58832_300x300" {
+                if let data = Data(contentsOf: URL(string: thumbnail)!) {
+                    thumbnail.image = UIImage(data: data)
                 }
             }
+            */
+            
+            // 2, guard let で書くとき。ネストが深くならない、かつ、早期リターンできるのでこちら推奨.
+            guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
+            guard let thumbnail = try? Data(contentsOf: thumbnailURL) else { return }
+            thumbnail.image = UIImage(data: thumbnail)
         }
     }
 
@@ -312,32 +322,48 @@ limit = 2にした時の出力結果が以下のようになっております�
 
 ## APIを取得してみる
 
-Utilsという新しいグループを作成して、その中にAPI通信や共通のメソッドをまとめていきます。まずNew Groupから新しいグループ（Utils）を作成
-して、その中にAPIManager.swiftとAPIUrl.swiftを新規作成します。この時、テンプレートはcocoa touchではなくswiftで良いです。APIUrl.swiftにはAPIのURLをまとめます。利用する際にはクエリパラメタ（検索する記事数等）の指定をしないといけません。
+UtilsとRequestsという新しいグループを作成して、その中にAPI通信や共通のメソッドをまとめていきます。まずNew Groupから2つ新しいグループ（UtilsとRequests）を作成
+して、Utilsの中にまずAPIManager.swiftを新規作成します。この時、テンプレートはcocoa touchではなくSwiftで良いです。RequestsにはAPIリクエストをまとめます。
 
-    ▼APIUrl.swift
+API通信を行うようのオブジェクトAPIManagerを作成します。`send`という関数にはジェネリクスという概念を利用しています。これは引数に型（型パラメータ）を与えるものです。ジェネリクスに関しては以下のページを参照してください。
 
-    import Foundation
-
-    class APIUrl {
-        
-        private static let host = "http://api.topicks.jp"
-        
-        static var articleList: String {
-            return host + "/api/v1/articles/list.json"
-        }
-        
-        static var articleDetail: String {
-            return host + "/api/v1/articles/show.json"
-        }
-    }
-
-次に、Alamofireを使ってAPI通信をする部分を実装していきます。API通信を行うようのオブジェクトAPIManagerを作成します。`get`という関数にはジェネリクスという概念を利用しています。これは引数に型を与えるものです。ジェネリクスに関しては以下のページを参照してください。
 `https://github.com/ngo275/learn-swift/tree/master/SwiftGenericsExplain.playground/Pages`
 
-返り値にある`Future<T.SerializedObject, T.ErrorObject>`の型は、プロミスといいます。非同期通信時、その通信が完了するまで値は入っておらず、その値がなくても先にプログラムを進めるために利用されます。
+返り値にある`Future<T.Response, SessionTaskError>`の型は、プロミスといいます。非同期通信時、その通信が完了するまで値は入っておらず、その値がなくても先にプログラムを進めるために利用されます。
 
-Alamofireを利用して、得られるjsonをArticleSerializerを使ってArticleというSwiftObjectにして取り扱います。このようにArticleという構造体を導入することで、データの受け渡しや、欲しいデータのアクセスを簡易化できます。jsonで取り扱うと、`json["result"]["Article"]["title"].stringValue`というアクセス方法を毎回取らねばなりません。Articleオブジェクトにすると`article.title`で利用できます。
+このようにArticleという構造体を導入することで、データの受け渡しや、欲しいデータのアクセスを簡易化できます。jsonで取り扱うと、`json["result"]["Article"]["title"].stringValue`というアクセス方法を毎回取らねばなりません。Articleオブジェクトにすると`article.title`で利用できます。タイポも減るしいいですね。  
+
+    ▼APIManager.swift
+
+    import Foundation
+    import SwiftyJSON
+    import APIKit
+    import BrightFutures
+
+    struct APIManager {
+    
+        static func send<T: MarbleRequest>(request: T, callbackQueue queue: CallbackQueue? = nil) -> Future<T.Response, SessionTaskError> {
+        
+            let promise = Promise<T.Response, SessionTaskError>()
+        
+            Session.send(request, callbackQueue: queue) { result in
+                // ここらへんの使用はAPIKitのREADMEを読みましょう。
+                switch result {
+                case let .success(data):
+                    promise.success(data)
+                
+                case let .failure(error):
+                    promise.failure(error)
+                }
+            }
+        
+            return promise.future
+        }
+    
+    }
+
+
+
 
     ▼APIManager.swift
 
