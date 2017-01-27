@@ -44,9 +44,9 @@ class ArticleViewController: UIViewController {
     }
     
     fileprivate func load() {
-        let params: [String: AnyObject] = [
-            "search_type": "category" as AnyObject,
-            "limit": 30 as AnyObject,
+        let params: [String: Any] = [
+            "search_type": "category",
+            "limit": 30
             //            "category_id": categoryId
         ]
         viewmodel.fetchArticles(params: params)

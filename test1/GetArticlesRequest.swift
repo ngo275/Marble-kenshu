@@ -14,7 +14,7 @@ struct GetArticlesRequest: MarbleRequest {
     
     typealias Response = (max: Int, articles: [Article])
     
-    var queryParameters: [String : Any]?
+    let queryParameters: [String : Any]?
     var method: HTTPMethod { return .get }
     var path: String { return "/articles/list.json" }
     

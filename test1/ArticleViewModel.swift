@@ -18,9 +18,9 @@ class ArticleViewModel {
     var articles = [Article]()
     var operations = [SDWebImageOperation?]()
     
-    func fetchArticles(params: [String: Any], isReset: Bool = false) -> Future<GetArticlesRequest.Response, SessionTaskError> {
+    func fetchArticles(params: [String: Any]) -> Future<GetArticlesRequest.Response, SessionTaskError> {
         
-        return APIManager.send(request: GetArticlesRequest())
+        return APIManager.send(request: GetArticlesRequest(queryParameters: params))
     }
     
     
