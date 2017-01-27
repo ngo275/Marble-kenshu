@@ -113,15 +113,12 @@ Swiftはライブラリを追加して機能を拡張して実装していきま
 `http://qiita.com/yutat93/items/97fe9bc2bf2e97da7ec1`
 これが非常にわかりやすくまとまっているので参考にしてインストールしてください。Terminalでプロジェクト場所に行き、以下の5つを新しく作成したCartfileに書き込んで`carthage update --platform iOS --no-use-binaries`を実行します。
 
-
-    github "Alamofire/Alamofire"
     github "SwiftyJSON/SwiftyJSON"    
     github "Thomvis/BrightFutures"
     github "rs/SDWebImage"
     github "realm/realm-cocoa"
     github "ishkawa/APIKit" ~> 3.0
 
-Alamofire: API通信を便利に行えるライブラリ。APIに関して次で説明します。
 
 SwiftyJson: JSONの取り扱いを簡単に行えるライブラリ。
 
@@ -131,9 +128,9 @@ SDWebImage: 画像の非同期処理を行うライブラリ。記事一覧を�
 
 realm-cocoa: Realmという永続的な記憶システムを利用可能にします。NSUserDefaultsよりも複雑なデータを保存できます。
 
-APIKit: API通信を便利に行えるライブラリ。APIに関して次で説明します。Alamofireから移行するつもりです。
+APIKit: API通信を便利に行えるライブラリ。APIに関して次で説明します。Alamofireから移行しました。
 
-これらのライブラリを利用する時は、`import UIKit`のようにファイルの先頭に利用するライブラリをインポートする宣言をするだけです。
+これらのライブラリを利用する時は、`import UIKit`のようにファイルの先頭に利用するライブラリをインポートする宣言します。
 
 
 ## APIの利用
@@ -217,7 +214,8 @@ limit = 2にした時の出力結果が以下のようになっております�
 
     class ArticleViewController: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
+        @IBOutlet weak var tableView: UITableView!
+        
         override func viewDidLoad() {
             super.viewDidLoad()
             tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
@@ -234,12 +232,12 @@ limit = 2にした時の出力結果が以下のようになっております�
 
     extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
         // return the number of tableCells
-        func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return 10
         }
         // draw the tableCells
-        func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell: ArticleTableViewCell = tableView.dequeueReusableCellWithIdentifier("ArticleTableViewCell") as! ArticleTableViewCell
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let cell: ArticleTableViewCell = tableView.dequeueReusableCell(withIdentifier: "ArticleTableViewCell") as! ArticleTableViewCell
             return cell
         }
     }
@@ -250,20 +248,20 @@ limit = 2にした時の出力結果が以下のようになっております�
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 96.0
 
-次に`CellForRowAtIndexPath`という描画のためのメソッドを実装します。先ほど登録したcellを呼び出すメソッドを記述します。ここでは呼び出ししか行っていませんが、この後、APIを利用して取得したデータを引数としてArticleTableViewCell.swiftに渡してcellを加工してreturnするメソッド（bindDataCellという名前にします）をArticleTableViewCell.swiftに書いていきます。
+次に`CellForRowAt`という描画のためのメソッドを実装します。先ほど登録したcellを呼び出すメソッドを記述します。ここでは呼び出ししか行っていませんが、この後、APIを利用して取得したデータを引数としてArticleTableViewCell.swiftに渡してcellを加工してreturnするメソッド（bindDataCellという名前にします）をArticleTableViewCell.swiftに書いていきます。
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell: ArticleTableViewCell = tableView.dequeueReusableCellWithIdentifier("ArticleTableViewCell") as! ArticleTableViewCell
-            return cell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: ArticleTableViewCell = tableView.dequeueReusableCell(withIdentifier: "ArticleTableViewCell") as! ArticleTableViewCell
+        return cell
     }
 
 ここまでくると、コマンド+Rで実行するとシミュレーターがエラーなく起動するはずです。
 
 コマンド+Rで実行
 コマンド+Bでビルド
-コマンド+シフト+Kでクリーン（キャッシュ等を削除してくれるのでたまにこれでエラーが解決したりします。）
+コマンド+シフト+Kでクリーン（キャッシュを削除してくれるのでたまにこれでエラーが解決したりします。）
 
-デバッグには、print('欲しい値など')やBreak Pointを挿入します。Break Pointはエディタに表示されている行数をクリックすることで挿入できます。青い印が入りますが、これがBreak Pointを表しています。実行中にここを通ると無理やり中断させて解析することができます。本当にここ通ってるのかなという時などに便利です。
+デバッグには、print('欲しい値など')やBreak Pointを挿入します。Break Pointはエディタに表示されている行数をクリックすることで挿入できます。青い印が入りますが、これがBreak Pointを表しています。実行中にここを通ると無理やり中断させて解析することができます。本当にここ通ってるのかなという時などに便利です。コンソールに(lldb)というものが出てきますが、これはデバッガで、`po article.count`のように`po 欲しい値`を出力できます。デバッガには他にもいろいろ便利な機能が備わっているので調べてみたり試しみてください。Break Pointを入れるときはいちいちアプリを実行し直す必要はありません。値を確認するときはprintを書いて再実行するより`po`で確認すると良いでしょう。
 
 `Terminating app due to uncaught exception 'NSUnknownKeyException'`というエラーが出たら、ArticleTableViewCell.xibとArticleTableViewCell.swiftとの関連付けがおかしくなっているはずです。
 
