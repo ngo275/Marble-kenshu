@@ -85,7 +85,7 @@ tableViewという変数をArticleViewControllerに追加します。
 
 ## TableViewCellの作成
 
-先ほど作成したArticleTableViewCell.xibファイルを開いてそこにTableViewCellを挿入します。この中に記事一覧のセルに必要なものを挿入します。Image Viewとlabelで作っていきます。Constraintsの設定をしていきます。UIImageViewのサイズを80×80にして上、左からの位置（offset）を8にしておきます。タイトルや日付もそれぞれの間隔を8にして設定していきます。
+先ほど作成したArticleTableViewCell.xibファイルを開いてそこにTableViewCellを挿入します。この中に記事一覧のセルに必要なものを挿入します。Image Viewとlabelで作っていきます。Constraintsの設定をしていきます。UIImageViewのサイズを80×80にして上、左からの位置（offset）を8にしておきます。タイトルや日付もそれぞれの間隔を8にして設定していきます。AutoLayoutまわりの[これ](http://qiita.com/kinopontas/items/d08f84dbb711c5acbe28)を参考にしてください。
 
 ![TableViewCellの作成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/14.png)
 
@@ -585,7 +585,15 @@ UIKit, SwiftyJSON, Alamofire, Resultをインポートしましょう。
 
     }
 
-この時点で実行すると記事データのログが大量に出るはずです。まだcellにデータを渡して描画するという部分を実装していないので、次はそこを実装します。
+この時点で実行すると、
+
+    test1[14247:6154680] App Transport Security has blocked a cleartext HTTP (http://) resource load since it is insecure. Temporary exceptions can be configured via your app's Info.plist file.
+
+というエラーが出るかもしれません。ATSの設定をいじります。以下の写真のように設定をしておきます。
+
+![ATS](https://s3-ap-northeast-1.amazonaws.com/ngo275.asset/Pic/ATSsetting.png)
+
+記事データのログが大量に出るはずです。まだcellにデータを渡して描画するという部分を実装していないので、次はそこを実装します。
 
 ArticleTableViewCell.swiftのbindDataCellという関数を以下のようにします。引数にarticleを入れることで各CellのUILabelのプロパティを欲しい形にできます。
 
