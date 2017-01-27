@@ -315,6 +315,7 @@ limit = 2にした時の出力結果が以下のようになっております�
         }
     }
 
+
 起動して、以下の画面のようになっていれば正しくできています。
 
 ![テスト画面](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/19.png)
@@ -363,37 +364,6 @@ API通信を行うようのオブジェクトAPIManagerを作成します。`sen
     }
 
 
-
-
-    ▼APIManager.swift
-
-    import Foundation
-    import SwiftyJSON
-    import Alamofire
-    import BrightFutures
-
-    class APIManager: NSObject {
-        
-        static let sharedInstance = APIManager()
-        
-        func get<T: ResponseSerializerType>(url: URLStringConvertible, params: [String: AnyObject], serializer: T) -> Future<T.SerializedObject, T.ErrorObject> {
-            let promise = Promise<T.SerializedObject, T.ErrorObject>()
-        
-            Alamofire.request(.GET, url, parameters: params)
-                .validate()
-                .response(responseSerializer: serializer) { response in
-                    switch response.result {
-                    case .Success(let r):
-                        promise.success(r)
-                    
-                    case .Failure(let error):
-                        print(error)
-                        promise.failure(error)
-                    }
-            }
-            return promise.future
-        }
-    }
     
 エラー処理をUtils.swiftにまとめて書いておきます。先ほど作成したUtilsの中に以下のファイルを作成しておきましょう。
 
