@@ -9,21 +9,31 @@
 import UIKit
 import BrightFutures
 import SwiftyJSON
-import Alamofire
+import APIKit
+import WebImage
 
-class ArticleViewModel: NSObject {
+class ArticleViewModel {
     
-    var articles: [Article]?
+    var max: Int = 0
+    var articles = [Article]()
+    var operations = [SDWebImageOperation?]()
+    
+    func fetchArticles(params: [String: Any]) -> Future<GetArticlesRequest.Response, SessionTaskError> {
+        
+        return APIManager.send(request: GetArticlesRequest(queryParameters: params))
+    }
+    
+    
     //    var articles: [[String: String?]] = []
     //    let table = UITableView()
     //    var max: Int = 0
-    private let apiManager = APIManager.sharedInstance
+    //fileprivate let apiManager = APIManager.sharedInstance
     
-    func fetchArticleList(params: [String: AnyObject]) -> Future<(Int,[Article]), NSError>  {
+    /*func fetchArticleList(_ params: [String: AnyObject]) -> Future<(Int,[Article]), NSError>  {
         let serializer = ArticleSerializer()
         let url = APIUrl.articleList
         return apiManager.get(url, params: params, serializer: serializer)
-    }
+    }*/
     
 //    private func mergeArticles(articles: [Article]) -> [Article] {
 //        if let _ = self.articles {

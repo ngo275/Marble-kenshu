@@ -21,20 +21,20 @@ class ArticleTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
 
-    func bindDataCell(article: Article) {
+    func bindDataCell(_ article: Article) {
         // 引数にArticleオブジェクトを受け取って、cellの作成を行います.
         self.title.text = article.title
         self.date.text = String(article.modified)
         self.desc.text = article.body
         self.user.text = article.userData.userName
         if let thumbnail: String = article.thumb {
-            if let data = NSData(contentsOfURL: NSURL(string: thumbnail)!) {
+            if let data = try? Data(contentsOf: URL(string: thumbnail)!) {
                 self.thumbnail.image = UIImage(data: data)
             }
         }

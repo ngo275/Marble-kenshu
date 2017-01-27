@@ -8,8 +8,8 @@
 
 import Foundation
 
-class APIUrl {
-    private static let host = "https://api.topicks.jp"
+/*class APIUrl {
+    fileprivate static let host = "https://api.topicks.jp"
     
     static var articleList: String {
         return host + "/api/v1/articles/list.json"
@@ -19,4 +19,4 @@ class APIUrl {
         return host + "/api/v1/articles/show.json"
     }
     
-}
+}*/

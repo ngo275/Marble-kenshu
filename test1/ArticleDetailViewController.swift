@@ -13,7 +13,7 @@ import Alamofire
 
 class ArticleDetailViewController: UIViewController {
 
-    let apiManager: APIManager = APIManager.sharedInstance
+    //let apiManager: APIManager = APIManager.sharedInstance
     var article: Article?
     
     @IBOutlet weak var text: UITextView!
@@ -22,7 +22,7 @@ class ArticleDetailViewController: UIViewController {
         super.viewDidLoad()
         if let article = article {
             text.text = article.body
-            text.editable = false
+            text.isEditable = false
         }
     }
 

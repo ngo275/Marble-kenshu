@@ -8,28 +8,25 @@
 
 import Foundation
 import SwiftyJSON
-import Alamofire
+import APIKit
 import BrightFutures
 
-class APIManager: NSObject {
+struct APIManager {
     
-    static let sharedInstance = APIManager()
-    
-    func get<T: ResponseSerializerType>(url: URLStringConvertible, params: [String: AnyObject], serializer: T) -> Future<T.SerializedObject, T.ErrorObject> {
-        let promise = Promise<T.SerializedObject, T.ErrorObject>()
+    static func send<T: MarbleRequest>(request: T, callbackQueue queue: CallbackQueue? = nil) -> Future<T.Response, SessionTaskError> {
         
-        Alamofire.request(.GET, url, parameters: params)
-            .validate()
-            .response(responseSerializer: serializer) { response in
-                switch response.result {
-                case .Success(let r):
-                    promise.success(r)
-                    
-                case .Failure(let error):
-                    print(error)
-                    promise.failure(error)
-                }
+        let promise = Promise<T.Response, SessionTaskError>()
+        
+        Session.send(request, callbackQueue: queue) { result in
+            switch result {
+            case let .success(data):
+                promise.success(data)
+                
+            case let .failure(error):
+                promise.failure(error)
+            }
         }
+        
         return promise.future
     }
     

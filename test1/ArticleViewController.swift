@@ -8,15 +8,13 @@
 
 import UIKit
 import SwiftyJSON
-import Alamofire
 import Result
 
 class ArticleViewController: UIViewController {
 
-    
-    private let viewmodel = ArticleViewModel()
-    private let apiManager: APIManager = APIManager.sharedInstance
-    private var articles: [Article]? {
+    fileprivate let viewmodel = ArticleViewModel()
+    //fileprivate let apiManager: APIManager = APIManager.sharedInstance
+    fileprivate var articles: [Article] {
         get {
             return viewmodel.articles
         }
@@ -39,19 +37,19 @@ class ArticleViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    private func initTableView() {
-        tableView!.register(registerCell: ArticleTableViewCell.self)
+    fileprivate func initTableView() {
+        tableView.register(registerCell: ArticleTableViewCell.self)
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 105.0
     }
     
-    private func load() {
-        let params: [String: AnyObject] = [
+    fileprivate func load() {
+        let params: [String: Any] = [
             "search_type": "category",
-            "limit": 30,
+            "limit": 30
             //            "category_id": categoryId
         ]
-        viewmodel.fetchArticleList(params)
+        viewmodel.fetchArticles(params: params)
             .onSuccess { [weak self] data in
                 self?.articles = data.1
                 self?.tableView.reloadData()
@@ -62,14 +60,14 @@ class ArticleViewController: UIViewController {
         }
     }
     
-    private func showErrorAlert(message: String, completion: ((UIAlertAction) -> Void)?) {
+    fileprivate func showErrorAlert(_ message: String, completion: ((UIAlertAction) -> Void)?) {
         let alert = UIAlertController(title: "MARBLE",
                                       message: message,
-                                      preferredStyle: UIAlertControllerStyle.Alert
+                                      preferredStyle: UIAlertControllerStyle.alert
         )
         
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: completion))
-        presentViewController(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: completion))
+        present(alert, animated: true, completion: nil)
     }
 
 }
@@ -79,19 +77,19 @@ extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
     // MARK: - UITableViewDataSource
     
     // return the number of tableCells
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return articles?.count ?? 0
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return articles.count
     }
     // draw the tableCells
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: ArticleTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-        cell.bindDataCell(articles![indexPath.row])
+        cell.bindDataCell(articles[indexPath.row])
         return cell
     }
     // action when a cell is tapped
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let next: ArticleDetailViewController = Utils.createViewController()
-        next.article = articles![indexPath.row]
+        next.article = articles[indexPath.row]
         navigationController?.pushViewController(next, animated: true)
 //        let storyboard: UIStoryboard = UIStoryboard(name: "ArticleDetail", bundle: nil)
 //        if let next: ArticleDetailViewController = storyboard.instantiateViewControllerWithIdentifier("ArticleDetail") as? ArticleDetailViewController {

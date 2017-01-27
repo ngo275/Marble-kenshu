@@ -15,7 +15,7 @@ protocol StoryboardLoadable: class {
 extension StoryboardLoadable where Self: UIViewController {
 
     static var storyboardName: String {
-        return NSStringFromClass(self).componentsSeparatedByString(".").last!.stringByReplacingOccurrencesOfString("ViewController", withString: "")
+        return NSStringFromClass(self).components(separatedBy: ".").last!.replacingOccurrences(of: "ViewController", with: "")
     }
     
 }

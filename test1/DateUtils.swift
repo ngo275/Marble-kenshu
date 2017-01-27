@@ -8,12 +8,12 @@
 
 import UIKit
 
-extension NSDate {
-    static func dateFromString(string: String, format: String = "yyyy-MM-dd HH:mm:ss") -> NSDate? {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
+extension Date {
+    static func dateFromString(_ string: String, format: String = "yyyy-MM-dd HH:mm:ss") -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ja_JP")
         dateFormatter.dateFormat = format
         
-        return dateFormatter.dateFromString(string)
+        return dateFormatter.date(from: string)
     }
 }
