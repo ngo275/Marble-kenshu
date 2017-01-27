@@ -299,7 +299,7 @@ limit = 2にした時の出力結果が以下のようになっております�
             user.text = "user'
             
             // 画像の描画に関して
-            // 1, if let構文で書くとき
+            // if let構文で書くとき
             //
             // if let thumbnail = "https://i.vimeocdn.com/portrait/58832_300x300" {
             //     if let data = Data(contentsOf: URL(string: thumbnail)!) {
@@ -307,7 +307,7 @@ limit = 2にした時の出力結果が以下のようになっております�
             //     }
             // }
             
-            // 2, guard let で書くとき。ネストが深くならない、かつ、早期リターンできるのでこちら推奨.
+            // guard let で書くとき。ネストが深くならない、かつ、早期リターンできるのでこちら推奨.
             guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
             guard let thumbnail = try? Data(contentsOf: thumbnailURL) else { return }
             thumbnail.image = UIImage(data: thumbnail)
