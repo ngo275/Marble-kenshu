@@ -71,8 +71,10 @@ Cellとそれに対応するファイルの関連付けを行っておきまし�
 
 移譲というとわかりにくいかもしれませんが、簡単に言いますと、自分だけでは（例えば使いたいプロパティを持っていないから）実装できないので、やってほしいことを宣言するから、その実装を頼みます、と他の場所に頼んでいるという風に思っておけば良いでしょう。頼む側を移譲元、頼まれる側を移譲先と言います。例えば`UITableViewDelegate`は移譲先がArticleViewControllerです。ArticleViewControllerは、頼まれたからやってやるぜ、という宣言をしないといけないのですが、それがネットでよく見かける
 
-    tableView.delegate = self
-    tableView.dataSource = self
+```swift
+tableView.delegate = self
+tableView.dataSource = self
+```
 
 です。今回はそれをStoryboardで設定しています。頼まれた側（移譲先）は自分で頼まれた内容を実装しないといけません。
 
@@ -98,11 +100,14 @@ ArticleTableViewCellの関連付けやIdentifierの設定を行います。
 ArticleTableViewCell.swiftとUIView（Cellには入っているViewパーツ）の関連付けをしていきます。ここで、ArticleTableViewCellに入っているViewパーツに`thumbnail`や`title`、`desc`、`date`という名前の変数を作成します。コントロールを押しながらViewパーツをドラッグしてArticleTableViewCell.swiftと繋ぎましょう。2画面にするにはXcodeの右上にある2つの円が重なっているマークをクリックします。
 ![２画面にする方法](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/24.png)
 
-    @IBOutlet weak var thumbnail: UIImageView!
-    @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var desc: UILabel!
-    @IBOutlet weak var date: UILabel!
-    @IBOutlet weak var user: UILabel!
+
+```swift
+@IBOutlet weak var thumbnail: UIImageView!
+@IBOutlet weak var title: UILabel!
+@IBOutlet weak var desc: UILabel!
+@IBOutlet weak var date: UILabel!
+@IBOutlet weak var user: UILabel!
+```
 
 ![関連付け](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/17.png)
 
@@ -113,12 +118,13 @@ Swiftはライブラリを追加して機能を拡張して実装していきま
 `http://qiita.com/yutat93/items/97fe9bc2bf2e97da7ec1`
 これが非常にわかりやすくまとまっているので参考にしてインストールしてください。Terminalでプロジェクト場所に行き、以下の5つを新しく作成したCartfileに書き込んで`carthage update --platform iOS --no-use-binaries`を実行します。
 
-    github "SwiftyJSON/SwiftyJSON"    
-    github "Thomvis/BrightFutures"
-    github "rs/SDWebImage"
-    github "realm/realm-cocoa"
-    github "ishkawa/APIKit" ~> 3.0
-
+```Cartfile.
+github "SwiftyJSON/SwiftyJSON"    
+github "Thomvis/BrightFutures"
+github "rs/SDWebImage"
+github "realm/realm-cocoa"
+github "ishkawa/APIKit" ~> 3.0
+```
 
 SwiftyJson: JSONの取り扱いを簡単に行えるライブラリ。
 
@@ -208,52 +214,58 @@ limit = 2にした時の出力結果が以下のようになっております�
 
 まず、ArticleViewControllerにおいて`UITableViewDelegate`, `UITableViewDataSource`の実装をしていきます。
 
-    ▼ArticleViewController.swift
 
-    import UIKit
+```ArticleViewController.swift
 
-    class ArticleViewController: UIViewController {
+import UIKit
 
-        @IBOutlet weak var tableView: UITableView!
-        
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
-            tableView.rowHeight = UITableViewAutomaticDimension
-            tableView.estimatedRowHeight = 96.0
-            // Do any additional setup after loading the view.
-        }
-        override func didReceiveMemoryWarning() {
-            super.didReceiveMemoryWarning()
-            // Dispose of any resources that can be recreated.
-        }
+class ArticleViewController: UIViewController {
+
+    @IBOutlet weak var tableView: UITableView!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 96.0
+        // Do any additional setup after loading the view.
     }
-
-
-    extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
-        // return the number of tableCells
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return 10
-        }
-        // draw the tableCells
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell: ArticleTableViewCell = tableView.dequeueReusableCell(withIdentifier: "ArticleTableViewCell") as! ArticleTableViewCell
-            return cell
-        }
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
+}
 
-まずcellの登録をしないといけません。また、cellの大きさの目安をあらかじめ指定しておくと良いです。
-
-    tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
-    tableView.rowHeight = UITableViewAutomaticDimension
-    tableView.estimatedRowHeight = 96.0
-
-次に`CellForRowAt`という描画のためのメソッドを実装します。先ほど登録したcellを呼び出すメソッドを記述します。ここでは呼び出ししか行っていませんが、この後、APIを利用して取得したデータを引数としてArticleTableViewCell.swiftに渡してcellを加工してreturnするメソッド（bindDataCellという名前にします）をArticleTableViewCell.swiftに書いていきます。
-
+extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
+    // return the number of tableCells
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+    // draw the tableCells
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: ArticleTableViewCell = tableView.dequeueReusableCell(withIdentifier: "ArticleTableViewCell") as! ArticleTableViewCell
         return cell
     }
+}
+```
+
+
+まずcellの登録をしないといけません。また、cellの大きさの目安をあらかじめ指定しておくと良いです。
+
+```swift
+tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
+tableView.rowHeight = UITableViewAutomaticDimension
+tableView.estimatedRowHeight = 96.0
+```
+
+次に`CellForRowAt`という描画のためのメソッドを実装します。先ほど登録したcellを呼び出すメソッドを記述します。ここでは呼び出ししか行っていませんが、この後、APIを利用して取得したデータを引数としてArticleTableViewCell.swiftに渡してcellを加工してreturnするメソッド（bindDataCellという名前にします）をArticleTableViewCell.swiftに書いていきます。
+
+```swift
+func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell: ArticleTableViewCell = tableView.dequeueReusableCell(withIdentifier: "ArticleTableViewCell") as! ArticleTableViewCell
+    return cell
+}
+```
 
 ここまでくると、コマンド+Rで実行するとシミュレーターがエラーなく起動するはずです。
 
@@ -270,51 +282,51 @@ limit = 2にした時の出力結果が以下のようになっております�
 
 ```ArticleTableViewCell.swift
 
-    import UIKit
+import UIKit
 
-    class ArticleTableViewCell: UITableViewCell {
+class ArticleTableViewCell: UITableViewCell {
 
-        @IBOutlet weak var thumbnail: UIImageView!
-        @IBOutlet weak var title: UILabel!
-        @IBOutlet weak var desc: UILabel!
-        @IBOutlet weak var date: UILabel!
-        @IBOutlet weak var user: UILabel!
-        
-        override func awakeFromNib() {
-            super.awakeFromNib()
-            // Initialization code
-            // これがないとXibファイルが生成されません.
-        }
-        
-        override func setSelected(selected: Bool, animated: Bool) {
-            super.setSelected(selected, animated: animated)
-            // Configure the view for the selected state
-        }
-        
-        func bindDataCell() {
-            // 引数にArticleオブジェクトを受け取って、cellの作成を行います.
-            // 現状まだ引数をいれずに適当な値を入れています.
-            title.text = "test"
-            date.text = "date"
-            desc.text = "記事の説明です"
-            user.text = "user'
-            
-            // 画像の描画に関して
-            // if let構文で書くとき
-            /* if let thumbnail = "https://i.vimeocdn.com/portrait/58832_300x300" {
-                   if let data = Data(contentsOf: URL(string: thumbnail)!) {
-                       thumbnail.image = UIImage(data: data)
-                   }
-                }
-            */
-            
-            // guard let で書くとき. ネストが深くならない、かつ、早期リターンできるのでこちら推奨.
-            guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
-            guard let thumbnail = try? Data(contentsOf: thumbnailURL) else { return }
-            thumbnail.image = UIImage(data: thumbnail)
-            
-        }
+    @IBOutlet weak var thumbnail: UIImageView!
+    @IBOutlet weak var title: UILabel!
+    @IBOutlet weak var desc: UILabel!
+    @IBOutlet weak var date: UILabel!
+    @IBOutlet weak var user: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        // これがないとXibファイルが生成されません.
     }
+
+    override func setSelected(selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        // Configure the view for the selected state
+    }
+
+    func bindDataCell() {
+        // 引数にArticleオブジェクトを受け取って、cellの作成を行います.
+        // 現状まだ引数をいれずに適当な値を入れています.
+        title.text = "test"
+        date.text = "date"
+        desc.text = "記事の説明です"
+        user.text = "user'
+
+        // 画像の描画に関して
+        // if let構文で書くとき
+        /* if let thumbnail = "https://i.vimeocdn.com/portrait/58832_300x300" {
+               if let data = Data(contentsOf: URL(string: thumbnail)!) {
+                   thumbnail.image = UIImage(data: data)
+               }
+            }
+        */
+
+        // guard let で書くとき. ネストが深くならない、かつ、早期リターンできるのでこちら推奨.
+        guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
+        guard let thumbnail = try? Data(contentsOf: thumbnailURL) else { return }
+        thumbnail.image = UIImage(data: thumbnail)
+
+    }
+}
 ```
 
 
@@ -338,253 +350,228 @@ API通信を行うようのオブジェクトAPIManagerを作成します。`sen
 
 ```APIManager.swift
 
-    import Foundation
-    import SwiftyJSON
-    import APIKit
-    import BrightFutures
+import Foundation
+import SwiftyJSON
+import APIKit
+import BrightFutures
 
-    struct APIManager {
-    
-        static func send<T: MarbleRequest>(request: T, callbackQueue queue: CallbackQueue? = nil) -> Future<T.Response, SessionTaskError> {
-        
-            let promise = Promise<T.Response, SessionTaskError>()
-        
-            Session.send(request, callbackQueue: queue) { result in
-                // ここらへんの使用はAPIKitのREADMEを読みましょう.
-                
-                switch result {
-                case let .success(data):
-                    promise.success(data)
-                
-                case let .failure(error):
-                    promise.failure(error)
-                }
+struct APIManager {
+
+    static func send<T: MarbleRequest>(request: T, callbackQueue queue: CallbackQueue? = nil) -> Future<T.Response, SessionTaskError> {
+
+        let promise = Promise<T.Response, SessionTaskError>()
+
+        Session.send(request, callbackQueue: queue) { result in
+            // ここらへんの使用はAPIKitのREADMEを読みましょう.
+            switch result {
+            case let .success(data):
+                promise.success(data)
+
+            case let .failure(error):
+                promise.failure(error)
             }
-        
-            return promise.future
         }
-    
+
+        return promise.future
     }
+
+}
 ```
 
     
 エラー処理をUtils.swiftにまとめて書いておきます。先ほど作成したUtilsの中に以下のファイルを作成しておきましょう。
 
-    ▼Utils.swift
-    import UIKit
+```Utils.swift
+import UIKit
 
-    class Utils {
-        static func createErrorObject(message: String, code: Int = 100) -> NSError {
-            let domain = "jp.co.candle.app.marble"
+class Utils {
+    static func createErrorObject(_ message: String, code: Int = 100) -> NSError {
+        let domain = "jp.co.candle.app.marble"
         
-            return NSError(domain: domain, code: 100, userInfo: [NSLocalizedDescriptionKey: message])
-        }
+        return NSError(domain: domain, code: 100, userInfo: [NSLocalizedDescriptionKey: message])
     }
-    
+}
+```
+
 日付のフォーマットに関して実装する際その都度、書かないといけない文言をUtilsにまとめておきます。
 
-    ▼DateUtils.swift
-    import UIKit
+```DateUtils.swift
+import UIKit
 
-    extension NSDate {
-        static func dateFromString(string: String, format: String = "yyyy-MM-dd HH:mm:ss") -> NSDate? {
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
-            dateFormatter.dateFormat = format
-            return dateFormatter.dateFromString(string)
-        }
+extension Date {
+    static func dateFromString(_ string: String, format: String = "yyyy-MM-dd HH:mm:ss") -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ja_JP")
+        dateFormatter.dateFormat = format
+        
+        return dateFormatter.date(from: string)
     }
+}
+```
 
-これがあることで`NSDate.dateFromString(日付に関するStringデータ.stringValue)`のようにStringからNSDateに簡単に型変換を行うことが可能になります。
+これがあることで`Date.dateFromString(日付に関するStringデータ.stringValue)`のように`String`から`Date`に簡単に型変換を行うことが可能になります。
 
-Modelの中にあるArticle.swiftを実装します。Modelの中にUser.swiftも作成しておきます。ここは天下り的になってしまいますが、Model, ViewModelを以下のように実装します。
+Modelの中にある`Article.swift`を実装します。Modelの中に`User.swift`も作成しておきます。ここは天下り的になってしまいますが、Model, ViewModelを以下のように実装します。
 
-    ▼Article.swift
+```Article.swift    
+import UIKit
+import SwiftyJSON
+
+struct Article {
+
+    let id: Int
+    let title: String
+    let body: String
+    let categoryId: Int
+    let categoryName: String
+    let itemOrder: String
+    let modified: Int
+    let onePage: Int
+    let provider: String
+    let published: Int
+    let thumb: String
+    let thumbNormal: String
+    let thumbOriginal: String
+    let thumbStatus: Int
+    let thumbUpdated: Date
+    let userData: User
     
-    import UIKit
-    import SwiftyJSON
-    import Alamofire
-    
-    struct Article {
+    init(json: JSON) {
+        let article = json["Article"]
+        id = article["id"].intValue
+        title = article["title"].stringValue
+        body = article["body"].stringValue
+        categoryId = article["category_id"].intValue
+        categoryName = article["category_name"].stringValue
+        itemOrder = article["item_order"].stringValue
+        modified = article["modified"].intValue
+        onePage = article["one_page"].intValue
+        provider = json["provider"].stringValue
+        published = article["published"].intValue
+        thumb = article["thumb"].stringValue
+        thumbNormal = article["thumb_normal"].stringValue
+        thumbOriginal = article["thumb_original"].stringValue
+        thumbStatus = article["thumb_status"].intValue
+        thumbUpdated = Date.dateFromString(article["thumb_updated"].stringValue) ?? Date()
+        userData = User(json: json["User"])
         
-        let id: Int
-        let title: String
-        let body: String
-        let categoryId: Int
-        let categoryName: String
-        let itemOrder: String
-        let modified: Int
-        let onePage: Int
-        let provider: String
-        let published: Int
-        let thumb: String
-        let thumbNormal: String
-        let thumbOriginal: String
-        let thumbStatus: Int
-        let thumbUpdated: NSDate
-        let userData: User
-        
-        init(json: JSON) {
-            let article = json["Article"]
-            id = article["id"].intValue
-            title = article["title"].stringValue
-            body = article["body"].stringValue
-            categoryId = article["category_id"].intValue
-            categoryName = article["category_name"].stringValue
-            itemOrder = article["item_order"].stringValue
-            modified = article["modified"].intValue
-            onePage = article["one_page"].intValue
-            provider = json["provider"].stringValue
-            published = article["published"].intValue
-            thumb = article["thumb"].stringValue
-            thumbNormal = article["thumb_normal"].stringValue
-            thumbOriginal = article["thumb_original"].stringValue
-            thumbStatus = article["thumb_status"].intValue
-            thumbUpdated = NSDate.dateFromString(article["thumb_updated"].stringValue) ?? NSDate()
-            userData = User(json: json["User"])
-        }
-    
     }
-    
-    struct ArticleSerializer: ResponseSerializerType {
-        
-        typealias SerializedObject = (max: Int, articles: [Article])
-        typealias ErrorObject = NSError
-        
-        var serializeResponse: (NSURLRequest?, NSHTTPURLResponse?, NSData?, NSError?) -> Result<SerializedObject, ErrorObject> = { (request, response, data, error) in
-            
-            if let error = error {
-                return Result.Failure(error)
-            }
-            
-            guard let responseData = data else {
-                return Result.Failure(Utils.createErrorObject("データの取得に失敗しました"))
-            }
-            
-            let json = JSON(data: responseData)
-            
-            if let message = json["message"].string {
-                return Result.Failure(Utils.createErrorObject(message))
-            }
-            
-            let max = json["meta"]["count"].int ?? 0
-            let articles = json["results"].arrayValue.map { Article(json: $0) }
-            return Result.Success((max, articles))
-        }
-    }
+}
+```
 
 Userモデルも記述していきます。    
 
-    ▼User.swift
+```User.swift
     
-    import UIKit
-    import SwiftyJSON
+import UIKit
+import SwiftyJSON
 
-    struct User {
-        
-        let id: Int
-        let screenName: String
-        let userName: String
-        
-        init(id: Int, screenName: String, userName: String) {
-            self.id = id
-            self.screenName = screenName
-            self.userName = userName
-        }
-        init(json: JSON) {
-            id = json["id"].int ?? 0
-            screenName = json["screenname"].string ?? ""
-            userName = json["username"].string ?? ""
-        }
+struct User {
+    
+    let id: Int
+    let screenName: String
+    let userName: String
+    
+    init(id: Int, screenName: String, userName: String) {
+        self.id = id
+        self.screenName = screenName
+        self.userName = userName
     }
+    
+    init(json: JSON) {
+        id = json["id"].int ?? 0
+        screenName = json["screenname"].string ?? ""
+        userName = json["username"].string ?? ""
+    }
+}
+```
 
 
 次にArticleViewModel.swiftを以下のようにします。
 
-    ▼ArticleViewModel.swift
-    
-    import UIKit
-    import BrightFutures
-    import SwiftyJSON
-    import Alamofire
+```ArticleViewModel.swift
+import UIKit
+import BrightFutures
+import SwiftyJSON
+import APIKit
 
-    class ArticleViewModel: NSObject {
-        // Articleオブジェクトの配列を定義します.初めはnilなのでOptional型です.
-        var articles: [Article]?
-        private let apiManager = APIManager.sharedInstance
+class ArticleViewModel {
+    
+    var max: Int = 0
+    var articles = [Article]()
+    
+    func fetchArticles(params: [String: Any]) -> Future<GetArticlesRequest.Response, SessionTaskError> {
         
-        func fetchArticleList(params: [String: AnyObject]) -> Future<(Int,[Article]), NSError>  {
-            let serializer = ArticleSerializer()
-            let url = APIUrl.articleList
-            return apiManager.get(url, params: params, serializer: serializer)
-        }
-        
+        return APIManager.send(request: GetArticlesRequest(queryParameters: params))
     }
+}
+```
 
 ArticleViewControllerにプロパティをつけていきます。まずArticleViewModel、APIManagerをインスタンス化します。都合上ArticleViewModelに[Article]?型のarticlesというプロパティを持たせていますが、それの読み書きをArticleViewControllerで行っています（`get`や`set`）。
 UIKit, SwiftyJSON, Alamofire, Resultをインポートしましょう。
 
-    class ArticleViewController: UIViewController {
-       
-        private let viewmodel = ArticleViewModel()
-        private let apiManager: APIManager = APIManager.sharedInstance
-        private var articles: [Article]? {
-            get {
-                return viewmodel.articles
-            }
-            set(newValue) {
-                viewmodel.articles = newValue
-            }
-        }
+```ArticleViewController.swift
+class ArticleViewController: UIViewController {
 
-        @IBOutlet weak var tableView: UITableView!
-    
-        override func viewDidLoad() {
-            super.viewDidLoad()
-        
-            load()
-            
-            tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
-            tableView.rowHeight = UITableViewAutomaticDimension
-            tableView.estimatedRowHeight = 96.0
+    private let viewmodel = ArticleViewModel()
+    private var articles: [Article] {
+        get {
+            return viewmodel.articles
         }
-
-        override func didReceiveMemoryWarning() {
-            super.didReceiveMemoryWarning()
-            // Dispose of any resources that can be recreated.
+        set(newValue) {
+            viewmodel.articles = newValue
         }
-
-        private func load() {
-            let params: [String: AnyObject] = [
-                "search_type": "category",
-                "limit": 30,
-            ]
-            viewmodel.fetchArticleList(params)
-                .onSuccess { [weak self] data in
-                    self?.articles = data.1
-                    self?.tableView.reloadData()
-                    print(data.1)
-                }
-                .onFailure { [weak self] error in
-                    self?.showErrorAlert(error.localizedDescription, completion: nil)
-            }
-        }
-    
-        private func showErrorAlert(message: String, completion: ((UIAlertAction) -> Void)?) {
-            let alert = UIAlertController(
-                title: "MARBLE", 
-                message: message,
-                preferredStyle: UIAlertControllerStyle.Alert
-            )
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: completion))
-            presentViewController(alert, animated: true, completion: nil)
-        }
-
     }
+
+    @IBOutlet weak var tableView: UITableView!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        load()
+
+        tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 96.0
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+
+    private func load() {
+        let params: [String: Any] = [
+            "search_type": "category",
+            "limit": 30,
+        ]
+        viewmodel.fetchArticleList(params: params)
+            .onSuccess { [weak self] data in
+                self?.articles = data.1
+                self?.tableView.reloadData()
+                print(data.1)
+            }
+            .onFailure { [weak self] error in
+                self?.showErrorAlert(error.localizedDescription, completion: nil)
+        }
+    }
+
+    private func showErrorAlert(_ message: String, completion: ((UIAlertAction) -> Void)?) {
+        let alert = UIAlertController(title: "MARBLE",
+                                      message: message,
+                                      preferredStyle: UIAlertControllerStyle.alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: completion))
+        present(alert, animated: true, completion: nil)
+    }
+
+}
+```
+
 
 この時点で実行すると、
 
-    test1[14247:6154680] App Transport Security has blocked a cleartext HTTP (http://) resource load since it is insecure. Temporary exceptions can be configured via your app's Info.plist file.
+`test1[14247:6154680] App Transport Security has blocked a cleartext HTTP (http://) resource load since it is insecure. Temporary exceptions can be configured via your app's Info.plist file.`
 
 というエラーが出るかもしれません。ATSの設定をいじります。以下の写真のように設定をしておきます。
 
@@ -594,19 +581,33 @@ UIKit, SwiftyJSON, Alamofire, Resultをインポートしましょう。
 
 ArticleTableViewCell.swiftのbindDataCellという関数を以下のようにします。引数にarticleを入れることで各CellのUILabelのプロパティを欲しい形にできます。
 
-    func bindDataCell(article: Article) {
-        // 引数にArticleオブジェクトを受け取って、cellの作成を行います.
-        self.title.text = article.title
-        self.date.text = String(article.modified)
-        self.desc.text = article.body
-        self.user.text = article.userData.userName
-        if let thumbnail: String = article.thumb {
-            if let data = NSData(contentsOfURL: NSURL(string: thumbnail)!) {
-                self.thumbnail.image = UIImage(data: data)
-            }
-        }
-    }
+```ArticleTableViewCell.swift
+
+///////
+func bindDataCell(article: Article) {
+    // 引数にArticleオブジェクトを受け取って、cellの作成を行います.
+    title.text = article.title
+    date.text = String(article.modified)
+    desc.text = article.body
+    user.text = article.userData.userName
     
+    // 画像の描画に関して
+    // if let構文で書くとき
+    /* if let thumbnail = "https://i.vimeocdn.com/portrait/58832_300x300" {
+           if let data = Data(contentsOf: URL(string: thumbnail)!) {
+               thumbnail.image = UIImage(data: data)
+           }
+        }
+    */
+
+    // guard let で書くとき. ネストが深くならない、かつ、早期リターンできるのでこちら推奨.
+    guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
+    guard let thumbnail = try? Data(contentsOf: thumbnailURL) else { return }
+    thumbnail.image = UIImage(data: thumbnail)
+    
+}
+```
+
 ArticleViewController側（呼び出し側）では以下のようにします。
 
     class ArticleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
