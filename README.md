@@ -265,21 +265,10 @@ limit = 2にした時の出力結果が以下のようになっております�
 
 `Terminating app due to uncaught exception 'NSUnknownKeyException'`というエラーが出たら、ArticleTableViewCell.xibとArticleTableViewCell.swiftとの関連付けがおかしくなっているはずです。
 
-ここでbindDataCellのひな形を作成しておきます。これを利用するには上の`CellForRowAtIndexPath`の中で`cell.bindDataCell()`とかくだけです。`guard let`の部分は
-
-    // 画像の描画に関して
-    // if let構文で書くとき
-    if let thumbnail = "https://i.vimeocdn.com/portrait/58832_300x300" {
-         if let data = Data(contentsOf: URL(string: thumbnail)!) {
-             thumbnail.image = UIImage(data: data)
-         }
-     }
-   
-
-と書くことも可能です。
+ここでbindDataCellのひな形を作成しておきます。これを利用するには上の`CellForRowAtIndexPath`の中で`cell.bindDataCell()`とかくだけです。
 
 
-    ArticleTableViewCell.swift
+```ArticleTableViewCell.swift
 
     import UIKit
 
@@ -309,14 +298,24 @@ limit = 2にした時の出力結果が以下のようになっております�
             date.text = "date"
             desc.text = "記事の説明です"
             user.text = "user'
+            
+            // 画像の描画に関して
+            // if let構文で書くとき
+            /* if let thumbnail = "https://i.vimeocdn.com/portrait/58832_300x300" {
+                   if let data = Data(contentsOf: URL(string: thumbnail)!) {
+                       thumbnail.image = UIImage(data: data)
+                   }
+                }
+            */
+            
             // guard let で書くとき. ネストが深くならない、かつ、早期リターンできるのでこちら推奨.
             guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
             guard let thumbnail = try? Data(contentsOf: thumbnailURL) else { return }
             thumbnail.image = UIImage(data: thumbnail)
-
+            
         }
     }
-
+```
 
 
 起動して、以下の画面のようになっていれば正しくできています。
@@ -337,7 +336,7 @@ API通信を行うようのオブジェクトAPIManagerを作成します。`sen
 
 このようにArticleという構造体を導入することで、データの受け渡しや、欲しいデータのアクセスを簡易化できます。jsonで取り扱うと、`json["result"]["Article"]["title"].stringValue`というアクセス方法を毎回取らねばなりません。Articleオブジェクトにすると`article.title`で利用できます。タイポも減るしいいですね。  
 
-    ▼APIManager.swift
+```APIManager.swift
 
     import Foundation
     import SwiftyJSON
@@ -366,7 +365,7 @@ API通信を行うようのオブジェクトAPIManagerを作成します。`sen
         }
     
     }
-
+```
 
     
 エラー処理をUtils.swiftにまとめて書いておきます。先ほど作成したUtilsの中に以下のファイルを作成しておきましょう。
