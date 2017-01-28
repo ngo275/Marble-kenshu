@@ -352,7 +352,8 @@ API通信を行うようのオブジェクトAPIManagerを作成します。`sen
             let promise = Promise<T.Response, SessionTaskError>()
         
             Session.send(request, callbackQueue: queue) { result in
-                // ここらへんの使用はAPIKitのREADMEを読みましょう。
+                // ここらへんの使用はAPIKitのREADMEを読みましょう.
+                
                 switch result {
                 case let .success(data):
                     promise.success(data)
