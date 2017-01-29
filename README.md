@@ -340,13 +340,9 @@ class ArticleTableViewCell: UITableViewCell {
 UtilsとRequestsという新しいグループを作成して、その中にAPI通信や共通のメソッドをまとめていきます。まずNew Groupから2つ新しいグループ（UtilsとRequests）を作成
 して、Utilsの中にまずAPIManager.swiftを新規作成します。この時、テンプレートはcocoa touchではなくSwiftで良いです。RequestsにはAPIリクエストをまとめます。
 
-API通信を行うようのオブジェクトAPIManagerを作成します。`send`という関数にはジェネリクスという概念を利用しています。これは引数に型（型パラメータ）を与えるものです。ジェネリクスに関しては以下のページを参照してください。
-
-`https://github.com/ngo275/learn-swift/tree/master/SwiftGenericsExplain.playground/Pages`
+API通信を行うようのオブジェクトAPIManagerを作成します。`send`という関数にはジェネリクスという概念を利用しています。これは引数に型（型パラメータ）を与えるものです。ジェネリクスに関しては[ここ](https://github.com/ngo275/learn-swift/tree/master/SwiftGenericsExplain.playground/Pages)を参照してください。
 
 返り値にある`Future<T.Response, SessionTaskError>`の型は、プロミスといいます。非同期通信時、その通信が完了するまで値は入っておらず、その値がなくても先にプログラムを進めるために利用されます。
-
-このようにArticleという構造体を導入することで、データの受け渡しや、欲しいデータのアクセスを簡易化できます。jsonで取り扱うと、`json["result"]["Article"]["title"].stringValue`というアクセス方法を毎回取らねばなりません。Articleオブジェクトにすると`article.title`で利用できます。タイポも減るしいいですね。  
 
 ```APIManager.swift
 
@@ -378,7 +374,55 @@ struct APIManager {
 }
 ```
 
+先ほど作成したディレクトリRequestsの中にはAPIKitで利用するリクエストの構造体を入れて行きます。まず`MarbleRequest.swift`を新規作成します。protocolを作成して`Request`というprotocolを採用します。このprotocolはAPIKit内で定義されているもので、`import APIKit`を宣言します。
+
+
+```MarbleRequest.swift
+import Foundation
+import APIKit
+
+protocol MarbleRequest: Request {}
+
+extension MarbleRequest {
+    var baseURL: URL { return URL(string: "http://api.topicks.jp/api/v1")! }
+}
+
+```
+
+
+次に、APIのリクエストごとに構造体を作成します。ここでは、記事一覧を持って来るためのリクエスト用の構造体（`GetArticlesRequest`）だけ作成しておきます。
+
+```GetArticlesRequest.swift
+import Foundation
+import APIKit
+import SwiftyJSON
+
+struct GetArticlesRequest: MarbleRequest {
+    // typealiasは型に別名をつけます.APIKitのDocumentに実装すべきpropertyやmethodが書いてあるので確認してみてください.
+    // maxは返ってきた記事数で、無限スクロールをする時に、次のページがあるかどうかの判別で使います.
+    typealias Response = (max: Int, articles: [Article])
     
+    // queryParametersは空でも動くように?をつけています.
+    let queryParameters: [String : Any]?
+    var method: HTTPMethod { return .get }
+    var path: String { return "/articles/list.json" }
+    
+    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> (max: Int, articles: [Article]) {
+        let json = JSON(object)
+        
+        if let message = json["message"].string {
+            throw ResponseError.unexpectedObject(message)
+        }
+        
+        let max = json["meta"]["count"].int ?? 0
+        let articles = json["results"].arrayValue.map { Article(json: $0) }
+        
+        return (max, articles)
+    }
+}
+
+```
+
 エラー処理をUtils.swiftにまとめて書いておきます。先ほど作成したUtilsの中に以下のファイルを作成しておきましょう。
 
 ```Utils.swift
@@ -411,7 +455,8 @@ extension Date {
 
 これがあることで`Date.dateFromString(日付に関するStringデータ.stringValue)`のように`String`から`Date`に簡単に型変換を行うことが可能になります。
 
-Modelの中にある`Article.swift`を実装します。Modelの中に`User.swift`も作成しておきます。ここは天下り的になってしまいますが、Model, ViewModelを以下のように実装します。
+Modelの中にある`Article.swift`を実装します。Modelの中に`User.swift`も作成しておきます。ここは天下り的になってしまいますが、Model, ViewModelを以下のように実装します。このようにArticleという構造体を導入することで、データの受け渡しや、欲しいデータのアクセスを簡易化できます。jsonで取り扱うと、`json["result"]["Article"]["title"].stringValue`というアクセス方法を毎回取らねばなりません。Articleオブジェクトにすると`article.title`で利用できます。タイポも減るしいいですね。  
+
 
 ```Article.swift    
 import UIKit
