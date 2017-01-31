@@ -730,55 +730,49 @@ extension NibLoadable where Self: UIView {
 }
 ```
 
-同様にしてProtocolsの中にReusable.swiftを作成して中身を以下のように記述します。
+同様にしてProtocolsの中に`Reusable.swift`を作成して中身を以下のように記述します。
 
-    import UIKit
+```Reusable.swift
+import UIKit
 
-    protocol Reusable: class {
-        static var defaultReuseIdentifier: String { get }
+protocol Reusable: class {
+    static var defaultReuseIdentifier: String { get }
+}
+
+extension Reusable where Self: UIView {
+    static var defaultReuseIdentifier: String {
+        return NSStringFromClass(self).components(separatedBy: ".").last!
     }
+}
+```
 
-    extension Reusable where Self: UIView {
-        static var defaultReuseIdentifier: String {
-            return NSStringFromClass(self).componentsSeparatedByString(".").last!
-        }
+Utilsの中に`TableViewUtils.swift`というファイルを作り以下のようにします。`// MARK - プロトコル名`としているのはプロトコルの適用部分に印をつける意味があり、検索時に可視化しやすくなります。
+
+```TableViewUtils.swift
+import UIKit
+
+extension UITableView {
+    
+    func register<T: UITableViewCell>(registerCell _: T.Type) where T: Reusable & NibLoadable  {
+        let nib = UINib(nibName: T.nibName, bundle: nil)
+        self.register(nib, forCellReuseIdentifier: T.defaultReuseIdentifier)
     }
-
-Utilsの中にTableViewUtils.swiftというファイルを作り以下のようにします。`// MARK - プロトコル名`としているのはプロトコルの適用部分に印をつける意味があり、検索時に可視化しやすくなります。
-
-    import UIKit
-
-    extension UITableView {
     
-        func register<T: UITableViewCell where T: Reusable>(registerCell _: T.Type) {
-            registerClass(T.self, forCellReuseIdentifier: T.defaultReuseIdentifier)
+    func dequeueReusableCell<T: UITableViewCell>(forIndexPath indexPath: IndexPath) -> T where T: Reusable {
+        guard let cell = self.dequeueReusableCell(withIdentifier: T.defaultReuseIdentifier, for: indexPath) as? T else {
+            fatalError("Could not dequeue cell with identifier: \(T.defaultReuseIdentifier)")
         }
-    
-        func register<T: UITableViewCell where T: protocol<Reusable, NibLoadable> >(registerCell _: T.Type) {
-            let nib = UINib(nibName: T.nibName, bundle: nil)
-            registerNib(nib, forCellReuseIdentifier: T.defaultReuseIdentifier)
-        }
-    
-        func dequeueReusableCell<T: UITableViewCell where T: Reusable>(forIndexPath indexPath: NSIndexPath) -> T {
-            guard let cell = dequeueReusableCellWithIdentifier(T.defaultReuseIdentifier, forIndexPath: indexPath) as? T else {
-                fatalError("Could not dequeue cell with identifier: \(T.defaultReuseIdentifier)")
-            }
         
-            return cell
-        }
+        return cell
     }
-    
-    // MARK - Reusable
-    extension UITableViewCell: Reusable {}
-
-    // MARK - NibLoadable
-    extension UITableViewCell: NibLoadable {}
+}
+```
 
 このようにメソッドを記述しておくことで、
 `tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")`
-=> `tableView!.register(registerCell: ArticleTableViewCell.self)`
+=> `tableView.register(registerCell: ArticleTableViewCell.self)`
 
-`let cell: ArticleTableViewCell = tableView.dequeueReusableCellWithIdentifier(cellClassName, forIndexPath: indexPath) as! ArticleTableViewCell`
+`let cell: ArticleTableViewCell = tableView..dequeueReusableCell(withIdentifier: cellClassName, forIndexPath: indexPath) as! ArticleTableViewCell`
 => `let cell: ArticleTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)`
 
 と記述するだけでよくなります。
@@ -789,43 +783,44 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
 
 参考にArticleViewController.swiftを載せておきます。`viewDidLoad`に`title = "MARBLE"`を書いておくといい感じにヘッダーが出ます。
 
-    ArticleViewController.swift
+
+```ArticleViewController.swift
+import UIKit
+import SwiftyJSON
+import Result
     
-    import UIKit
-    import SwiftyJSON
-    import Alamofire
-    import Result
-    
-    class ArticleViewController: UIViewController {
-    
-        
-        private let viewmodel = ArticleViewModel()
-        private let apiManager: APIManager = APIManager.sharedInstance
-        private var articles: [Article]? {
-            get {
-                return viewmodel.articles
-            }
-            set(newValue) {
-                viewmodel.articles = newValue
-            }
+class ArticleViewController: UIViewController {
+            
+    private let viewmodel = ArticleViewModel()
+    private let apiManager: APIManager = APIManager.sharedInstance
+    fileprivate var articles: [Article] {
+        get {
+            return viewmodel.articles
         }
-        
-        @IBOutlet weak var tableView: UITableView!
-        
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            title = "MARBLE"
-            load()
-            initTableView()
+        set(newValue) {
+            viewmodel.articles = newValue
         }
+    }
+        
+    @IBOutlet weak var tableView: UITableView!
+        
+    override func viewDidLoad() {
+        super.viewDidLoad()
+            
+        title = "MARBLE"
+        load()
+        initTableView()
+    }
     
         override func didReceiveMemoryWarning() {
             super.didReceiveMemoryWarning()
             // Dispose of any resources that can be recreated.
         }
         
+        // MARK: private method
+        
         private func initTableView() {
-            tableView!.register(registerCell: ArticleTableViewCell.self)
+            tableView.register(registerCell: ArticleTableViewCell.self)
             tableView.rowHeight = UITableViewAutomaticDimension
             tableView.estimatedRowHeight = 105.0
         }
@@ -838,47 +833,53 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
             ]
             viewmodel.fetchArticleList(params)
                 .onSuccess { [weak self] data in
-                    self?.articles = data.1
+                    self?.articles = data.articles
                     self?.tableView.reloadData()
-                    print(data.1)
+                    // data.1とdata.articlesは等しい
+                    print(data.articles)
                 }
                 .onFailure { [weak self] error in
                     self?.showErrorAlert(error.localizedDescription, completion: nil)
             }
         }
         
-        private func showErrorAlert(message: String, completion: ((UIAlertAction) -> Void)?) {
+        private func showErrorAlert(_ message: String, completion: ((UIAlertAction) -> Void)?) {
             let alert = UIAlertController(title: "MARBLE",
-                                          message: message,
-                                          preferredStyle: UIAlertControllerStyle.Alert
+                                      message: message,
+                                      preferredStyle: UIAlertControllerStyle.alert
             )
-            
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: completion))
-            presentViewController(alert, animated: true, completion: nil)
+        
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: completion))
+            present(alert, animated: true, completion: nil)
         }
     
     }
     
-    extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
-        
-        // MARK: - UITableViewDataSource
-        
-        // return the number of tableCells
-        func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return articles?.count ?? 0
-        }
-        // draw the tableCells
-        func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell: ArticleTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-            cell.bindDataCell(articles![indexPath.row])
-            return cell
-        }
+extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    // MARK: - UITableViewDataSource
+    
+    // return the number of tableCells
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return articles.count
     }
-
+    // draw the tableCells
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: ArticleTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+        cell.bindDataCell(articles[indexPath.row])
+    
+        return cell
+    }
+    // action when a cell is tapped
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //TODO: jump to the detail page.
+    }
+}
+```
 
 ## 記事詳細ページの作成
 
-Storyboardsの中にあるArticleDetail.storyboardを編集していきます。この中にViewControllerを挿入して、ViewControllerというフォルダの中にあるArticleDetailViewControllerと関連付けをします。
+Storyboardsの中にある`ArticleDetail.storyboard`を編集していきます。この中にViewControllerを挿入して、ViewControllerというフォルダの中にあるArticleDetailViewControllerと関連付けをします。
 
 ![ArticleDetailStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/22.png)
 
@@ -897,86 +898,106 @@ Identifierもつけておきます。
 
 ArticleDetailViewControllerは以下のようになります。
     
-    ▼ArticleDetailViewController.swift
-    
-    import UIKit
-    import SwiftyJSON
-    import Alamofire
-    
-    class ArticleDetailViewController: UIViewController {
+```ArticleDetailViewController.swift
+import UIKit
+import SwiftyJSON
 
-        let apiManager: APIManager = APIManager.sharedInstance
-        var article: Article?
-    
-        @IBOutlet weak var text: UITextView!
-    
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            if let article = article {
-                text.text = article.body
-                text.editable = false
-            }
+class ArticleDetailViewController: UIViewController {
+
+    let apiManager: APIManager = APIManager.sharedInstance
+    var article: Article?
+
+    @IBOutlet weak var text: UITextView!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        if let article = article {
+            text.text = article.body
+            text.editable = false
         }
-    
-        override func didReceiveMemoryWarning() {
-            super.didReceiveMemoryWarning()
-        }
-        
     }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+
+}
+```
 
 あとはArticleViewControllerから遷移して、その際にArticleを受け渡せばよいです。
-`tableView`にはCellをタップした時のアクションを実装するfunctionが準備されています（delegate）のでそれを利用します。
+`tableView`にはCellをタップした時のアクションを実装するfunctionが準備されています（delegate）のでそれを利用します。以下を`ArticleVeiwContrller.swift`に書きます。
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let storyboard: UIStoryboard = UIStoryboard(name: "ArticleDetail", bundle: nil)
-        if let next: ArticleDetailViewController = storyboard.instantiateViewControllerWithIdentifier("ArticleDetail") as? ArticleDetailViewController {
-            next.article = articles![indexPath.row]
-            navigationController?.pushViewController(next, animated: true)
-        }
+```swift
+func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let storyboard: UIStoryboard = UIStoryboard(name: "ArticleDetail", bundle: nil)
+    if let next: ArticleDetailViewController = storyboard.instantiateViewControllerWithIdentifier("ArticleDetail") as? ArticleDetailViewController {
+        next.article = articles[indexPath.row]
+        navigationController?.pushViewController(next, animated: true)
     }
-    
-このfuctionを遷移元であるArticleViewControllerの`extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {`の中に記述しましょう。ここでは、まず遷移先のStoryboardをインスタンス化して、それに対応するViewControllerを取得、そこに遷移する、という流れです。その時に一緒に遷移先の`article`というプロパティにタップされたarticleを渡しています。タップされたCellは`indexPath.row`でアクセスできます。
+}
+```
+
+このfuctionを遷移元であるArticleViewControllerの`extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {`の中に記述しましょう。ここでは、まず遷移先のStoryboardをインスタンス化して、それに対応するViewControllerを取得、そこに遷移する、という流れです。その時に一緒に遷移先の`article`というプロパティにタップされたarticleを渡しています。タップされたCellは`indexPath.row`（`indexPath.item`）でアクセスできます。
 
 ここまでくるとタップすると遷移できているはずです。
 
 記事一覧を表示するときに、Cellを登録する・表示する時にProtocolに切り出しましたが、ここでもStoryboardの遷移の関数は繰り返し使うのでProtocolに切り出して統一しましょう。
 
-ProtocolsというフォルダにStoryboardLoadable.swiftというファイルを作成して以下のように記述します。
+Protocolsというフォルダに`StoryboardLoadable.swift`というファイルを作成して以下のように記述します。
 
-    import UIKit
+```StoryboardLoadable.swift
+import UIKit
 
-    protocol StoryboardLoadable: class {
-        static var storyboardName: String { get }
+protocol StoryboardLoadable: class {
+    static var storyboardName: String { get }
+}
+
+extension StoryboardLoadable where Self: UIViewController {
+
+    static var storyboardName: String {
+        return NSStringFromClass(self).components(separatedBy: ".").last!.replacingOccurrences(of: "ViewController", with: "")
     }
-    
-    extension StoryboardLoadable where Self: UIViewController {
 
-        static var storyboardName: String {
-            return NSStringFromClass(self).componentsSeparatedByString(".").last!.stringByReplacingOccurrencesOfString("ViewController", withString: "")
-        }
-        
-    }
+}
+```
 
 そして、Utilsの中にあるUtils.swiftに
 
+```Utils.swift
+import UIKit
+
+class Utils {
+    
+    static func createErrorObject(_ message: String, code: Int = 100) -> NSError {
+        let domain = "jp.co.candle.app.marble"
+        
+        return NSError(domain: domain, code: 100, userInfo: [NSLocalizedDescriptionKey: message])
+    }
+    
     static func createViewController<T: StoryboardLoadable>() -> T {
         let sb = UIStoryboard(name: T.storyboardName, bundle: nil)
         return sb.instantiateInitialViewController() as! T
     }
+    
+}
+```
 
-と加えておきます。どこかに以下のプロトコル適用を書いておきます。場所はどこでも良いですが、ArticleViewController.swiftに書いておきます。
+と加えておきます。どこかに以下のプロトコル適用を書いておきます。場所はどこでも良いですが、`ArticleViewController.swift`に書いておきます。`ArticleVeiwContrller.swift`の末尾がわかりやすいでしょう。
 
-    // MARK - StoryboardLoadable
-    extension UIViewController: StoryboardLoadable {}
+```swift
+// MARK - StoryboardLoadable
+extension UIViewController: StoryboardLoadable {}
+```
 
 さきほどの関数もこのようにスッキリします。このようにプロトコルを利用する方法を取り入れていきましょう。
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-            let next: ArticleDetailViewController = Utils.createViewController()
-            next.article = articles![indexPath.row]
-            navigationController?.pushViewController(next, animated: true)
-
-    }
+```swift
+func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let next: ArticleDetailViewController = Utils.createViewController()
+    next.article = articles[indexPath.row]
+    navigationController?.pushViewController(next, animated: true)
+}
+```
 
 ## Tabの利用
 
