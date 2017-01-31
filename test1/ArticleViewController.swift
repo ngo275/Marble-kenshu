@@ -51,7 +51,7 @@ class ArticleViewController: UIViewController {
         ]
         viewmodel.fetchArticles(params: params)
             .onSuccess { [weak self] data in
-                self?.articles = data.1
+                self?.articles = data.articles
                 self?.tableView.reloadData()
                 print(data.1)
             }
