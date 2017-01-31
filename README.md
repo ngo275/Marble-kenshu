@@ -661,66 +661,74 @@ ArticleViewController側（呼び出し側）では以下のようにします�
     
     // MARK: - UITableViewDataSource
     
-とMARKのコメントをつける習慣もつけましょう。フォーマットを守りましょう。
+とMARKのコメントをつける習慣もつけましょう。フォーマットを守りましょう。MARKはXcodeで検索をする時に利用できます。
 
-    extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
-    
-        // MARK: - UITableViewDataSource
-        
-        // return the number of tableViewCells
-        func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return articles?.count ?? 0
-        }
-        // draw the tableCells
-        func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell: ArticleTableViewCell = tableView.dequeueReusableCellWithIdentifier("ArticleTableViewCell") as! ArticleTableViewCell
-            cell.bindDataCell(articles![indexPath.row])
-            return cell
-        }
+```ArticleViewContrller.swift
+///
+extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
+
+    // MARK: - UITableViewDataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return articles.count
     }
+    // draw the tableCells
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: ArticleTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+        cell.bindDataCell(articles[indexPath.row])
+        
+        return cell
+    }
+}
+```
 
-`indexPath`には`row`と`section`というプロパティが存在して、`section`はTableのかたまりで、`row`はその中でのインデックスに相当します。ここではsectionは一つしかないので`row`のみ利用します。`CellForRowAtIndexPath`では`indexPath`順に一つ一つのCellが描画されていきます。
+`indexPath`には`row`と`section`というプロパティが存在して、`section`はTableのかたまりで、`row`（もしくは`item`。`row`と`item`は同義）はその中でのインデックスに相当します。ここではsectionは一つしかないので`row`のみ（`item`でもよい）利用します。`CellForRowAt`では`indexPath`順に一つ一つのCellが描画されていきます。
 
 この時点でシミュレーターを実行すると記事一覧が表示されるはずです。（ATSの設定を変更しないと画像がうまく表示されないかもしれません。）
 
 この時ArticleViewControllerのviewDidLoadをみると以下のようになっています。
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+```ArticleViewContoller.swift
+override func viewDidLoad() {
+    super.viewDidLoad()
         
-        load()
+    load()
         
-        tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 96.0
-    }
-
+    tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
+    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.estimatedRowHeight = 96.0
+}
+```
 
 tableView...という記述が3行ありますね。なるべく`viewDidLoad`は関数呼び出しに専念させたいので、この3行を関数に切り出しましょう。
 
-    private func initTableView() {
-        tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 96.0
-    }
+```ArticleViewController.swift
+///
+private func initTableView() {
+    tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
+    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.estimatedRowHeight = 96.0
+}
+```
 
 という関数を`private func load()`とかと並列する位置に書きましょう。そして`viewDidLoad`に`initTableView()`を`load()`の下に加えましょう。
 
 次に、ArticleTableViewCellを登録して描画するまでにArticleViewControllerに4つものArticleTableViewControllerというワードが出てきています。また他のCellをXibファイルに作成して描画するたびにこの面倒な記述をしなければならないのです（typoとかの可能性も増大しますね）。こういう面倒な記述をプロトコルを利用して簡略化できるので実装していきましょう。
 
-New Groupからまた新しいグループを作成してProtocolsと名付けましょう。その中にファイルの新規作成（テンプレートはSwift file）からNibLoadable.swiftというファイルを作ります。NibLoadable.swiftの中身は以下のようにします。
+New Groupからまた新しいグループを作成してProtocolsと名付けましょう。その中にファイルの新規作成（テンプレートはSwift file）から`NibLoadable.swift`というファイルを作ります。`NibLoadable.swift`の中身は以下のようにします。
 
-    import UIKit
+```NibLoadable.swift
+import UIKit
 
-    protocol NibLoadable: class {
-        static var nibName: String { get }
+protocol NibLoadable: class {
+    static var nibName: String { get }
+}
+
+extension NibLoadable where Self: UIView {
+    static var nibName: String {
+        return NSStringFromClass(self).components(separatedBy: ".").last!
     }
-
-    extension NibLoadable where Self: UIView {
-        static var nibName: String {
-            return NSStringFromClass(self).componentsSeparatedByString(".").last!
-        }
-    }
+}
+```
 
 同様にしてProtocolsの中にReusable.swiftを作成して中身を以下のように記述します。
 
@@ -781,7 +789,7 @@ Utilsの中にTableViewUtils.swiftというファイルを作り以下のよう�
 
 参考にArticleViewController.swiftを載せておきます。`viewDidLoad`に`title = "MARBLE"`を書いておくといい感じにヘッダーが出ます。
 
-    ▼ArticleViewController.swift
+    ArticleViewController.swift
     
     import UIKit
     import SwiftyJSON
