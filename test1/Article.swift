@@ -9,7 +9,6 @@
 
 import UIKit
 import SwiftyJSON
-import Alamofire
 
 //protocol JSONSerializable {
 //    func toJson() -> JSON

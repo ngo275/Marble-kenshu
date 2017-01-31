@@ -10,13 +10,12 @@ import UIKit
 import BrightFutures
 import SwiftyJSON
 import APIKit
-import WebImage
 
 class ArticleViewModel {
     
     var max: Int = 0
     var articles = [Article]()
-    var operations = [SDWebImageOperation?]()
+    //var operations = [SDWebImageOperation?]()
     
     func fetchArticles(params: [String: Any]) -> Future<GetArticlesRequest.Response, SessionTaskError> {
         

@@ -8,7 +8,7 @@
 
 import UIKit
 import SwiftyJSON
-import Alamofire
+//import Alamofire
 
 
 class ArticleDetailViewController: UIViewController {
