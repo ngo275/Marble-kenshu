@@ -882,7 +882,7 @@ extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
 
 ## 記事詳細ページの作成
 
-Storyboardsの中にある`ArticleDetail.storyboard`を編集していきます。この中にViewControllerを挿入して、ViewControllerというフォルダの中にあるArticleDetailViewControllerと関連付けをします。
+Storyboardsの中にある`ArticleDetail.storyboard`を編集していきます。この中にViewControllerを挿入して、ViewControllerというフォルダの中にある`ArticleDetailViewController`と関連付けをします。
 
 ![ArticleDetailStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/22.png)
 
@@ -890,7 +890,7 @@ Storyboardsの中にある`ArticleDetail.storyboard`を編集していきます�
 
 ![textViewの追加](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/23.png)
 
-ArticleDetailViewControllerと先ほど追加したtextViewを関連付けます。基本的にStoryboardにあるものはすべてコードでも関連付けをしないといけないと思っておいて良いでしょう。
+ArticleDetailViewControllerと先ほど追加したtextViewを関連付けます（コントロールを押しながらドラッグするやつ）。基本的にStoryboardにあるものはすべてコードでも関連付けをしないといけないと思っておいて良いでしょう。
 Identifierもつけておきます。
 
 ![identifier](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/25.png)
@@ -899,7 +899,7 @@ Identifierもつけておきます。
 
 ![initial設定](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/26.png)
 
-ArticleDetailViewControllerは以下のようになります。
+`ArticleDetailViewController.swift`は以下のようになります。
     
 ```ArticleDetailViewController.swift
 import UIKit
@@ -927,13 +927,13 @@ class ArticleDetailViewController: UIViewController {
 }
 ```
 
-あとはArticleViewControllerから遷移して、その際にArticleを受け渡せばよいです。
+あとは`ArticleViewController`ら遷移して、その際に`article`を受け渡せばよいです。
 `tableView`にはCellをタップした時のアクションを実装するfunctionが準備されています（delegate）のでそれを利用します。以下を`ArticleVeiwContrller.swift`に書きます。
 
 ```swift
 func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let storyboard: UIStoryboard = UIStoryboard(name: "ArticleDetail", bundle: nil)
-    if let next: ArticleDetailViewController = storyboard.instantiateViewControllerWithIdentifier("ArticleDetail") as? ArticleDetailViewController {
+    if let next: ArticleDetailViewController = storyboard.instantiateViewController(withIdentifier: "ArticleDetail") as? ArticleDetailViewController {
         next.article = articles[indexPath.row]
         navigationController?.pushViewController(next, animated: true)
     }
@@ -1012,11 +1012,12 @@ Main.storyboardにTabBarControllerを追加します。デフォルトで2つの
 
 `Main.storyboard`には`TabBarController`ひとつが残っているようにしたら、これに`Is Initial View Controller`の設定をしておきます。`Article.storyboard`の`NavigationController`にも同じように設定します。基本的に各storyboardには必ず`Is Initial View Controller`をつけたStoryboardが存在するようにしなければなりません。
 
-次は、`Article.storyboard`の`NavigationController`に対応する`ViewController`を作成しなければなりません。`ArticleContainerViewController`とします。各Tabに1つ`ContainerViewController`を対応させる必要があります。`ContainerViewController`というフォルダを作成して、その中に`ContainerViewController`を追加していきましょう。新規作成で`CocoaTouchClass`で`UINavigationController`を継承した`ArticleContainerViewController`を作ります。そして下の画面のように`NavigationController`と関連付けをしておきましょう。
+~~次は、`Article.storyboard`の`NavigationController`に対応する`ViewController`を作成しなければなりません。`ArticleContainerViewController`とします。各Tabに1つ`ContainerViewController`を対応させる必要があります。`ContainerViewController`というフォルダを作成して、その中に`ContainerViewController`を追加していきましょう。新規作成で`CocoaTouchClass`で`UINavigationController`を継承した`ArticleContainerViewController`を作ります。そして下の画面のように`NavigationController`と関連付けをしておきましょう。~~
+`ArticleViewController.swift`とかに紐づく`NavigationViewController`はデフォルトのままでよくて、いちいちそれに紐づく`ContainerViewController`を作る必要はありません。
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/28.png)
 
-`ArticleContainerViewController`は以下のように少しだけメソッドを付け足しておきます。
+~~`ArticleContainerViewController`は以下のように少しだけメソッドを付け足しておきます。
 
     import UIKit
 
@@ -1092,11 +1093,11 @@ TabBarItemを`Article.storyboard`に挿入します。
 ## お気に入り機能の実装
 
 記事詳細ページに適当なボタンを設置してそれをタップするとLikeでき、Likeページに行くとLikeした記事の一覧を見れる、というお気に入り機能を実装します。
-
+Realmを使います。
 
 ## 最後にgithubに公開
 
-ここまでで作成したappをgithubに公開するときの注意点を述べておきます。xcodeの作業分をFinderで確認するとディレクトリがなく全て同じ階層に作成されているはずです。xcodeのプロジェクト構成とFinderのプロジェクト構成を動機する必要があります。でないとgitに反映されるのはFinderと同じディレクトリ構成なので新規にグループを作ったはずなのに反映されていない、というワナにはまってしまいます。
+ここまでで作成したappをgithubに公開するときの注意点を述べておきます。xcodeの作業分をFinderで確認するとディレクトリがなく全て同じ階層に作成されているはずです。Xcodeのプロジェクト構成とFinderのプロジェクト構成を同期する必要があります。でないとgithubに反映されるのはFinderと同じディレクトリ構成なので新規にグループを作ったはずなのに反映されていない、というワナにはまってしまいます。
 
 `http://s31o3.hatenablog.com/entry/2015/03/27/151432`
 
