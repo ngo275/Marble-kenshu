@@ -212,7 +212,7 @@ limit = 2にした時の出力結果が以下のようになっております�
     
 ## Cellを表示してみる
 
-まず、ArticleViewControllerにおいて`UITableViewDelegate`, `UITableViewDataSource`の実装をしていきます。
+まず、`ArticleViewController.swift`において`UITableViewDelegate`, `UITableViewDataSource`の実装をしていきます。
 
 
 ```ArticleViewController.swift
@@ -258,7 +258,7 @@ tableView.rowHeight = UITableViewAutomaticDimension
 tableView.estimatedRowHeight = 96.0
 ```
 
-次に`CellForRowAt`という描画のためのメソッドを実装します。先ほど登録したcellを呼び出すメソッドを記述します。ここでは呼び出ししか行っていませんが、この後、APIを利用して取得したデータを引数としてArticleTableViewCell.swiftに渡してcellを加工してreturnするメソッド（bindDataCellという名前にします）をArticleTableViewCell.swiftに書いていきます。
+次に`CellForRowAt`という描画のためのメソッドを実装します。先ほど登録したcellを呼び出すメソッドを記述します。ここでは呼び出ししか行っていませんが、この後、APIを利用して取得したデータを引数として`ArticleTableViewCell.swift`に渡してcellを加工してreturnするメソッド（`bindDataCell`という名前にします）を`ArticleTableViewCell.swift`に書いていきます。
 
 ```swift
 func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -277,7 +277,7 @@ func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> U
 
 `Terminating app due to uncaught exception 'NSUnknownKeyException'`というエラーが出たら、ArticleTableViewCell.xibとArticleTableViewCell.swiftとの関連付けがおかしくなっているはずです。
 
-ここでbindDataCellのひな形を作成しておきます。これを利用するには上の`CellForRowAtIndexPath`の中で`cell.bindDataCell()`とかくだけです。
+ここでbindDataCellのひな形を作成しておきます。これを利用するには上の`CellForRowAt`の中で`cell.bindDataCell()`とかくだけです。
 
 
 ```ArticleTableViewCell.swift
@@ -295,8 +295,8 @@ class ArticleTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        // これがないとXibファイルが生成されません.
-    }
+        // cellの生成時に必ず通る
+    }
 
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -342,7 +342,7 @@ UtilsとRequestsという新しいグループを作成して、その中にAPI�
 
 API通信を行うようのオブジェクトAPIManagerを作成します。`send`という関数にはジェネリクスという概念を利用しています。これは引数に型（型パラメータ）を与えるものです。ジェネリクスに関しては[ここ](https://github.com/ngo275/learn-swift/tree/master/SwiftGenericsExplain.playground/Pages)を参照してください。
 
-返り値にある`Future<T.Response, SessionTaskError>`の型は、プロミスといいます。非同期通信時、その通信が完了するまで値は入っておらず、その値がなくても先にプログラムを進めるために利用されます。
+返り値にある`Future<T.Response, SessionTaskError>`の型は、プロミスといいます。非同期通信時、その通信が完了するまで値は入っておらず、その値がなくても先にプログラムを進めるために利用されます。`APIManager.swift`は以下のようにします。
 
 ```APIManager.swift
 
@@ -376,7 +376,6 @@ struct APIManager {
 
 先ほど作成したディレクトリRequestsの中にはAPIKitで利用するリクエストの構造体を入れて行きます。まず`MarbleRequest.swift`を新規作成します。protocolを作成して`Request`というprotocolを採用します。このprotocolはAPIKit内で定義されているもので、`import APIKit`を宣言します。
 
-
 ```MarbleRequest.swift
 import Foundation
 import APIKit
@@ -390,7 +389,7 @@ extension MarbleRequest {
 ```
 
 
-次に、APIのリクエストごとに構造体を作成します。ここでは、記事一覧を持って来るためのリクエスト用の構造体（`GetArticlesRequest`）だけ作成しておきます。
+次に、APIのリクエストごとに構造体を作成します。ここでは、記事一覧を持って来るためのリクエスト用の構造体（`GetArticlesRequest`）だけ作成しておきます。`GetArticleRequest.swift`は以下のようになる。
 
 ```GetArticlesRequest.swift
 import Foundation
@@ -423,7 +422,7 @@ struct GetArticlesRequest: MarbleRequest {
 
 ```
 
-エラー処理をUtils.swiftにまとめて書いておきます。先ほど作成したUtilsの中に以下のファイルを作成しておきましょう。
+エラー処理を`Utils.swift`にまとめて書いておきます。先ほど作成したUtilsの中に以下のファイルを作成しておきましょう。
 
 ```Utils.swift
 import UIKit
@@ -437,7 +436,7 @@ class Utils {
 }
 ```
 
-日付のフォーマットに関して実装する際その都度、書かないといけない文言をUtilsにまとめておきます。
+日付のフォーマットに関して実装する際その都度、書かないといけない文言をUtilsにまとめておきます。`DateUtils.swift`というファイルを作って以下のようにします。
 
 ```DateUtils.swift
 import UIKit
@@ -453,10 +452,11 @@ extension Date {
 }
 ```
 
-これがあることで`Date.dateFromString(日付に関するStringデータ.stringValue)`のように`String`から`Date`に簡単に型変換を行うことが可能になります。
+これがあることで`Date.dateFromString`(日付に関するStringデータ.stringValue)のように`String`から`Date`に簡単に型変換を行うことが可能になります。
 
 Modelの中にある`Article.swift`を実装します。Modelの中に`User.swift`も作成しておきます。ここは天下り的になってしまいますが、Model, ViewModelを以下のように実装します。このようにArticleという構造体を導入することで、データの受け渡しや、欲しいデータのアクセスを簡易化できます。jsonで取り扱うと、`json["result"]["Article"]["title"].stringValue`というアクセス方法を毎回取らねばなりません。Articleオブジェクトにすると`article.title`で利用できます。タイポも減るしいいですね。  
 
+まず`Article.swift`から。
 
 ```Article.swift    
 import UIKit
@@ -504,7 +504,7 @@ struct Article {
 }
 ```
 
-Userモデルも記述していきます。    
+Userモデルも`Uesr.seift`に記述していきます。    
 
 ```User.swift
     
@@ -532,7 +532,7 @@ struct User {
 ```
 
 
-次にArticleViewModel.swiftを以下のようにします。
+次に`ArticleViewModel.swift`を以下のようにします。
 
 ```ArticleViewModel.swift
 import UIKit
@@ -552,7 +552,7 @@ class ArticleViewModel {
 }
 ```
 
-ArticleViewControllerにプロパティをつけていきます。まずArticleViewModel、APIManagerをインスタンス化します。都合上ArticleViewModelに[Article]?型のarticlesというプロパティを持たせていますが、それの読み書きをArticleViewControllerで行っています（`get`や`set`）。
+次に`ArticleViewController.swift`にプロパティをつけていきます。まず`ArticleViewModel`、`APIManager`をインスタンス化します。都合上ArticleViewModelに`[Article]型`の`articles`というプロパティを持たせていますが、それの読み書きを`ArticleViewController`で行っています（`get`や`set`）。
 UIKit, SwiftyJSON, Alamofire, Resultをインポートしましょう。
 
 ```ArticleViewController.swift
@@ -624,7 +624,7 @@ class ArticleViewController: UIViewController {
 
 記事データのログが大量に出るはずです。まだcellにデータを渡して描画するという部分を実装していないので、次はそこを実装します。
 
-ArticleTableViewCell.swiftのbindDataCellという関数を以下のようにします。引数にarticleを入れることで各CellのUILabelのプロパティを欲しい形にできます。
+`ArticleTableViewCell.swift`の`bindDataCell`という関数を以下のようにします。引数に`article`を入れることで各Cellの`UILabel`のプロパティを欲しい形にできます。
 
 ```ArticleTableViewCell.swift
 
@@ -653,11 +653,11 @@ func bindDataCell(article: Article) {
 }
 ```
 
-ArticleViewController側（呼び出し側）では以下のようにします。
+`ArticleViewController`側（呼び出し側）では以下のようにします。
 
     class ArticleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-と`ArticleViewController`の定義時にまとめて`TableViewDelegate`を書くことが可能ですが、なるべくそれぞれのDelegate単位で`extension`を使って分割していくようにします。また
+と`ArticleViewController`の定義時にまとめて`UITableViewDelegate`を書くことが可能ですが、なるべくそれぞれのDelegate単位で`extension`を使って分割していくようにします。Swiftの拡張機能。また
     
     // MARK: - UITableViewDataSource
     
@@ -685,7 +685,7 @@ extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
 
 この時点でシミュレーターを実行すると記事一覧が表示されるはずです。（ATSの設定を変更しないと画像がうまく表示されないかもしれません。）
 
-この時ArticleViewControllerのviewDidLoadをみると以下のようになっています。
+この時`ArticleViewController.swift`の`viewDidLoad`をみると以下のようになっています。
 
 ```ArticleViewContoller.swift
 override func viewDidLoad() {
@@ -699,7 +699,7 @@ override func viewDidLoad() {
 }
 ```
 
-tableView...という記述が3行ありますね。なるべく`viewDidLoad`は関数呼び出しに専念させたいので、この3行を関数に切り出しましょう。
+`tableView...`という記述が3行ありますね。なるべく`viewDidLoad`は関数呼び出しに専念させたいので、この3行を関数に切り出しましょう。
 
 ```ArticleViewController.swift
 ///
@@ -712,7 +712,7 @@ private func initTableView() {
 
 という関数を`private func load()`とかと並列する位置に書きましょう。そして`viewDidLoad`に`initTableView()`を`load()`の下に加えましょう。
 
-次に、ArticleTableViewCellを登録して描画するまでにArticleViewControllerに4つものArticleTableViewControllerというワードが出てきています。また他のCellをXibファイルに作成して描画するたびにこの面倒な記述をしなければならないのです（typoとかの可能性も増大しますね）。こういう面倒な記述をプロトコルを利用して簡略化できるので実装していきましょう。
+次に、`ArticleTableViewCell`を登録して描画するまでに`ArticleViewController`に4つもの`ArticleTableViewController`というワードが出てきています。また他のCellをXibファイルに作成して描画するたびにこの面倒な記述をしなければならないのです（typoとかの可能性も増大しますね）。こういう面倒な記述をプロトコルを利用して簡略化できるので実装していきましょう。
 
 New Groupからまた新しいグループを作成してProtocolsと名付けましょう。その中にファイルの新規作成（テンプレートはSwift file）から`NibLoadable.swift`というファイルを作ります。`NibLoadable.swift`の中身は以下のようにします。
 
@@ -770,9 +770,11 @@ extension UITableView {
 
 このようにメソッドを記述しておくことで、
 `tableView.registerNib(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")`
+
 => `tableView.register(registerCell: ArticleTableViewCell.self)`
 
 `let cell: ArticleTableViewCell = tableView..dequeueReusableCell(withIdentifier: cellClassName, forIndexPath: indexPath) as! ArticleTableViewCell`
+
 => `let cell: ArticleTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)`
 
 と記述するだけでよくなります。
@@ -781,7 +783,7 @@ extension UITableView {
 
 ![記事一覧完成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/21.png)
 
-参考にArticleViewController.swiftを載せておきます。`viewDidLoad`に`title = "MARBLE"`を書いておくといい感じにヘッダーが出ます。
+参考に`ArticleViewController.swift`を載せておきます。`viewDidLoad`に`title = "MARBLE"`を書いておくといい感じにヘッダーが出ます。
 
 
 ```ArticleViewController.swift
@@ -876,6 +878,7 @@ extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 ```
+この時点では画像表示がカクカクしているかと思います。
 
 ## 記事詳細ページの作成
 
