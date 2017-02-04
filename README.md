@@ -132,7 +132,7 @@ BrightFutures: プロミスの取り扱いを簡単にするライブラリ。
 
 SDWebImage: 画像の非同期処理を行うライブラリ。記事一覧をスクロールする時に動作が重くなるのを防げます。（Kingfisherに置き換えたい。）
 
-realm-cocoa: Realmという永続的な記憶システムを利用可能にします。NSUserDefaultsよりも複雑なデータを保存できます。
+realm-cocoa: Realmという永続的な記憶システムを利用可能にします。UserDefaultsよりも複雑なデータを簡単に保存できます。
 
 APIKit: API通信を便利に行えるライブラリ。APIに関して次で説明します。Alamofireから移行しました。
 
@@ -273,11 +273,11 @@ func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> U
 コマンド+Bでビルド
 コマンド+シフト+Kでクリーン（キャッシュを削除してくれるのでたまにこれでエラーが解決したりします。）
 
-デバッグには、print('欲しい値など')やBreak Pointを挿入します。Break Pointはエディタに表示されている行数をクリックすることで挿入できます。青い印が入りますが、これがBreak Pointを表しています。実行中にここを通ると無理やり中断させて解析することができます。本当にここ通ってるのかなという時などに便利です。コンソールに(lldb)というものが出てきますが、これはデバッガで、`po article.count`のように`po 欲しい値`を出力できます。デバッガには他にもいろいろ便利な機能が備わっているので調べてみたり試しみてください。Break Pointを入れるときはいちいちアプリを実行し直す必要はありません。値を確認するときはprintを書いて再実行するより`po`で確認すると良いでしょう。
+デバッグには、`print('欲しい値など')`やBreak Pointを挿入します。Break Pointはエディタに表示されている行数をクリックすることで挿入できます。青い印が入りますが、これがBreak Pointを表しています。実行中にここを通ると無理やり中断させて解析することができます。本当にここ通ってるのかなという時などに便利です。コンソールに(`lldb`)というものが出てきますが、これはデバッガで、`po article.count`のように`po 欲しい値`を出力できます。デバッガには他にもいろいろ便利な機能が備わっているので調べてみたり試しみてください。Break Pointを入れるときはいちいちアプリを実行し直す必要はありません。値を確認するときは`print`を書いて再実行するより`po`で確認すると良いでしょう。
 
-`Terminating app due to uncaught exception 'NSUnknownKeyException'`というエラーが出たら、ArticleTableViewCell.xibとArticleTableViewCell.swiftとの関連付けがおかしくなっているはずです。
+`Terminating app due to uncaught exception 'NSUnknownKeyException'`というエラーが出たら、`ArticleTableViewCell.xib`と`ArticleTableViewCell.swift`との関連付けがおかしくなっているはずです。
 
-ここでbindDataCellのひな形を作成しておきます。これを利用するには上の`CellForRowAt`の中で`cell.bindDataCell()`とかくだけです。
+ここで`bindDataCell`のひな形を作成しておきます。これを利用するには上の`CellForRowAt`の中で`cell.bindDataCell()`とかくだけです。
 
 
 ```ArticleTableViewCell.swift
@@ -337,12 +337,12 @@ class ArticleTableViewCell: UITableViewCell {
 
 ## APIを取得してみる
 
-UtilsとRequestsという新しいグループを作成して、その中にAPI通信や共通のメソッドをまとめていきます。まずNew Groupから2つ新しいグループ（UtilsとRequests）を作成
-して、Utilsの中にまずAPIManager.swiftを新規作成します。この時、テンプレートはcocoa touchではなくSwiftで良いです。RequestsにはAPIリクエストをまとめます。
+`Utils`と`Requests`という新しいグループを作成して、その中にAPI通信や共通のメソッドをまとめていきます。まずNew Groupから2つ新しいグループ（`Utils`と`Requests`）を作成
+して、`Utils`の中にまず`APIManager.swift`を新規作成します。この時、テンプレートは`cocoa touch`ではなく`Swift`で良いです。`Requests`にはAPIリクエストをまとめます。
 
-API通信を行うようのオブジェクトAPIManagerを作成します。`send`という関数にはジェネリクスという概念を利用しています。これは引数に型（型パラメータ）を与えるものです。ジェネリクスに関しては[ここ](https://github.com/ngo275/learn-swift/tree/master/SwiftGenericsExplain.playground/Pages)を参照してください。
+API通信を行うようのオブジェクトAPIManagerを作成します。`send`という関数には**ジェネリクス**という概念を利用しています。これは引数に型（型パラメータ）を与えるものです。ジェネリクスに関しては[ここ](https://github.com/ngo275/learn-swift/tree/master/SwiftGenericsExplain.playground/Pages)を参照してください。
 
-返り値にある`Future<T.Response, SessionTaskError>`の型は、プロミスといいます。非同期通信時、その通信が完了するまで値は入っておらず、その値がなくても先にプログラムを進めるために利用されます。`APIManager.swift`は以下のようにします。
+返り値にある`Future<T.Response, SessionTaskError>`の型は、**プロミス**といいます。非同期通信時、その通信が完了するまで値は入っておらず、その値がなくても先にプログラムを進めるために利用されます。`APIManager.swift`は以下のようにします。
 
 ```APIManager.swift
 
@@ -374,7 +374,7 @@ struct APIManager {
 }
 ```
 
-先ほど作成したディレクトリRequestsの中にはAPIKitで利用するリクエストの構造体を入れて行きます。まず`MarbleRequest.swift`を新規作成します。protocolを作成して`Request`というprotocolを採用します。このprotocolはAPIKit内で定義されているもので、`import APIKit`を宣言します。
+先ほど作成したディレクトリ`Requests`の中には`APIKit`で利用するリクエストの構造体を入れて行きます。まず`MarbleRequest.swift`を新規作成します。protocolを作成して`Request`というprotocolを採用します。このprotocolは`APIKit`内で定義されているもので、`import APIKit`を宣言します。
 
 ```MarbleRequest.swift
 import Foundation
@@ -389,7 +389,7 @@ extension MarbleRequest {
 ```
 
 
-次に、APIのリクエストごとに構造体を作成します。ここでは、記事一覧を持って来るためのリクエスト用の構造体（`GetArticlesRequest`）だけ作成しておきます。`GetArticleRequest.swift`は以下のようになる。
+次に、APIのリクエストごとに構造体を作成します。ここでは、記事一覧を持って来るためのリクエスト用の構造体（`GetArticlesRequest`）だけ作成しておきます。`GetArticleRequest.swift`は以下のようになります。
 
 ```GetArticlesRequest.swift
 import Foundation
@@ -422,7 +422,7 @@ struct GetArticlesRequest: MarbleRequest {
 
 ```
 
-エラー処理を`Utils.swift`にまとめて書いておきます。先ほど作成したUtilsの中に以下のファイルを作成しておきましょう。
+エラー処理を`Utils.swift`にまとめて書いておきます。先ほど作成した`Utils`の中に以下のファイルを作成しておきましょう。
 
 ```Utils.swift
 import UIKit
@@ -436,7 +436,7 @@ class Utils {
 }
 ```
 
-日付のフォーマットに関して実装する際その都度、書かないといけない文言をUtilsにまとめておきます。`DateUtils.swift`というファイルを作って以下のようにします。
+日付のフォーマットに関して実装する際その都度、書かないといけない処理を`Utils`にまとめておきます。`DateUtils.swift`というファイルを作って以下のようにします。
 
 ```DateUtils.swift
 import UIKit
@@ -452,7 +452,7 @@ extension Date {
 }
 ```
 
-これがあることで`Date.dateFromString`(日付に関するStringデータ.stringValue)のように`String`から`Date`に簡単に型変換を行うことが可能になります。
+これがあることで`Date.dateFromString`(`日付に関するStringデータ.stringValue`)のように`String`から`Date`に簡単に型変換を行うことが可能になります。
 
 Modelの中にある`Article.swift`を実装します。Modelの中に`User.swift`も作成しておきます。ここは天下り的になってしまいますが、Model, ViewModelを以下のように実装します。このようにArticleという構造体を導入することで、データの受け渡しや、欲しいデータのアクセスを簡易化できます。jsonで取り扱うと、`json["result"]["Article"]["title"].stringValue`というアクセス方法を毎回取らねばなりません。Articleオブジェクトにすると`article.title`で利用できます。タイポも減るしいいですね。  
 
@@ -504,7 +504,7 @@ struct Article {
 }
 ```
 
-Userモデルも`Uesr.seift`に記述していきます。    
+Userモデルも`User.swift`に記述していきます。    
 
 ```User.swift
     
@@ -552,10 +552,14 @@ class ArticleViewModel {
 }
 ```
 
-次に`ArticleViewController.swift`にプロパティをつけていきます。まず`ArticleViewModel`、`APIManager`をインスタンス化します。都合上ArticleViewModelに`[Article]型`の`articles`というプロパティを持たせていますが、それの読み書きを`ArticleViewController`で行っています（`get`や`set`）。
-UIKit, SwiftyJSON, Alamofire, Resultをインポートしましょう。
+次に`ArticleViewController.swift`にプロパティをつけていきます。まず`ArticleViewModel`、`APIManager`をインスタンス化します。都合上`ArticleViewModel`に`[Article]型`の`articles`というプロパティを持たせていますが、それの読み書きを`ArticleViewController`で行っています（`get`や`set`）。
+`UIKit`, `SwiftyJSON`, `Result`をインポートしましょう。
 
 ```ArticleViewController.swift
+import UIKit
+import SwiftyJSON
+import Result
+
 class ArticleViewController: UIViewController {
 
     private let viewmodel = ArticleViewModel()
@@ -681,9 +685,9 @@ extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
 }
 ```
 
-`indexPath`には`row`と`section`というプロパティが存在して、`section`はTableのかたまりで、`row`（もしくは`item`。`row`と`item`は同義）はその中でのインデックスに相当します。ここではsectionは一つしかないので`row`のみ（`item`でもよい）利用します。`CellForRowAt`では`indexPath`順に一つ一つのCellが描画されていきます。
+`indexPath`には`row`と`section`というプロパティが存在して、`section`はTableのかたまりで、`row`（もしくは`item`。`row`と`item`は同義）はその中でのインデックスに相当します。ここではsectionは一つしかないのでここでは`row`のみ（`item`でもよい）利用します。`CellForRowAt`では`indexPath`順に一つ一つのCellが描画されていきます。
 
-この時点でシミュレーターを実行すると記事一覧が表示されるはずです。（ATSの設定を変更しないと画像がうまく表示されないかもしれません。）
+この時点でシミュレーターを実行すると記事一覧が表示されるはずです。（**ATS**の設定を変更しないと画像がうまく表示されないかもしれません。）
 
 この時`ArticleViewController.swift`の`viewDidLoad`をみると以下のようになっています。
 
@@ -710,11 +714,11 @@ private func initTableView() {
 }
 ```
 
-という関数を`private func load()`とかと並列する位置に書きましょう。そして`viewDidLoad`に`initTableView()`を`load()`の下に加えましょう。
+という関数を`private func load()`とかと並列する位置に書きましょう。そして`viewDidLoad`に`initTableView()`を`load()`の下に加えましょう。`private`はそのスコープ内でアクセス可能にするアクセス修飾子です。`fileprivate`が、同じファイル内からのアクセスを可能にする修飾子です。デフォルトは`internal`です。
 
 次に、`ArticleTableViewCell`を登録して描画するまでに`ArticleViewController`に4つもの`ArticleTableViewController`というワードが出てきています。また他のCellをXibファイルに作成して描画するたびにこの面倒な記述をしなければならないのです（typoとかの可能性も増大しますね）。こういう面倒な記述をプロトコルを利用して簡略化できるので実装していきましょう。
 
-New Groupからまた新しいグループを作成してProtocolsと名付けましょう。その中にファイルの新規作成（テンプレートはSwift file）から`NibLoadable.swift`というファイルを作ります。`NibLoadable.swift`の中身は以下のようにします。
+New Groupからまた新しいグループを作成して`Protocols`と名付けましょう。その中にファイルの新規作成（テンプレートはSwift file）から`NibLoadable.swift`というファイルを作ります。`NibLoadable.swift`の中身は以下のようにします。
 
 ```NibLoadable.swift
 import UIKit
@@ -730,7 +734,7 @@ extension NibLoadable where Self: UIView {
 }
 ```
 
-同様にしてProtocolsの中に`Reusable.swift`を作成して中身を以下のように記述します。
+同様にして`Protocols`の中に`Reusable.swift`を作成して中身を以下のように記述します。
 
 ```Reusable.swift
 import UIKit
@@ -746,7 +750,7 @@ extension Reusable where Self: UIView {
 }
 ```
 
-Utilsの中に`TableViewUtils.swift`というファイルを作り以下のようにします。`// MARK - プロトコル名`としているのはプロトコルの適用部分に印をつける意味があり、検索時に可視化しやすくなります。
+`Utils`の中に`TableViewUtils.swift`というファイルを作り以下のようにします。`// MARK - プロトコル名`としているのはプロトコルの適用部分に印をつける意味があり、検索時に可視化しやすくなります。
 
 ```TableViewUtils.swift
 import UIKit
@@ -878,11 +882,11 @@ extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 ```
-この時点では画像表示がカクカクしているかと思います。
+この時点では画像表示がカクカクしているかと思います。`WebImage`を使ってこのカクカクを解消します。
 
 ## 記事詳細ページの作成
 
-Storyboardsの中にある`ArticleDetail.storyboard`を編集していきます。この中にViewControllerを挿入して、ViewControllerというフォルダの中にある`ArticleDetailViewController`と関連付けをします。
+`Storyboards`の中にある`ArticleDetail.storyboard`を編集していきます。この中に`ViewController`を挿入して、`ViewController`というフォルダの中にある`ArticleDetailViewController`と関連付けをします。
 
 ![ArticleDetailStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/22.png)
 
@@ -890,12 +894,12 @@ Storyboardsの中にある`ArticleDetail.storyboard`を編集していきます�
 
 ![textViewの追加](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/23.png)
 
-ArticleDetailViewControllerと先ほど追加したtextViewを関連付けます（コントロールを押しながらドラッグするやつ）。基本的にStoryboardにあるものはすべてコードでも関連付けをしないといけないと思っておいて良いでしょう。
-Identifierもつけておきます。
+`ArticleDetailViewController`と先ほど追加した`textView`を関連付けます（コントロールを押しながらドラッグするやつ）。基本的にStoryboardにあるものはすべてコードでも関連付けをしないといけないと思っておいて良いでしょう。
+*Identifier*もつけておきます。
 
 ![identifier](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/25.png)
 
-遷移してきた時に最初にStoryboardのどれに初めにアクセスすればいいのかを伝えるために以下のようにInitialのチェックをつけます。
+**遷移してきた時に最初にStoryboardのどれに初めにアクセスすればいいのかを伝えるために以下のようにInitialのチェックをつけます。**
 
 ![initial設定](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/26.png)
 
