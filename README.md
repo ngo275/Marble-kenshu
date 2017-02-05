@@ -890,7 +890,7 @@ extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {
 
 ![ArticleDetailStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/22.png)
 
-ここでは、Storyboardの分割・遷移にフォーカスしているので、記事詳細ページで表示するのは`article.body`だけにとどめておきます。下の画像のようにtextViewを挿入します。Constraintも自分で自由に設定して良いです。
+ここでは、Storyboardの分割・遷移にフォーカスしているので、記事詳細ページで表示するのは`article.body`だけにとどめておきます。下の画像のように`textView`を挿入します。Constraintも自分で自由に設定して良いです。
 
 ![textViewの追加](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/23.png)
 
@@ -944,13 +944,13 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 }
 ```
 
-このfuctionを遷移元であるArticleViewControllerの`extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {`の中に記述しましょう。ここでは、まず遷移先のStoryboardをインスタンス化して、それに対応するViewControllerを取得、そこに遷移する、という流れです。その時に一緒に遷移先の`article`というプロパティにタップされたarticleを渡しています。タップされたCellは`indexPath.row`（`indexPath.item`）でアクセスできます。
+このfuctionを遷移元であるArticleViewControllerの`extension ArticleViewController: UITableViewDelegate, UITableViewDataSource {`の中に記述しましょう。ここでは、まず遷移先のStoryboardをインスタンス化して、それに対応するViewControllerを取得、そこに遷移する、という流れです。その時に一緒に遷移先の`article`というプロパティにタップされた`article`を渡しています。タップされたCellは`indexPath.row`（`indexPath.item`）でアクセスできます。
 
 ここまでくるとタップすると遷移できているはずです。
 
 記事一覧を表示するときに、Cellを登録する・表示する時にProtocolに切り出しましたが、ここでもStoryboardの遷移の関数は繰り返し使うのでProtocolに切り出して統一しましょう。
 
-Protocolsというフォルダに`StoryboardLoadable.swift`というファイルを作成して以下のように記述します。
+`Protocols`というフォルダに`StoryboardLoadable.swift`というファイルを作成して以下のように記述します。
 
 ```StoryboardLoadable.swift
 import UIKit
@@ -968,7 +968,7 @@ extension StoryboardLoadable where Self: UIViewController {
 }
 ```
 
-そして、Utilsの中にあるUtils.swiftに
+そして、`Utils`の中にある`Utils.swift`に
 
 ```Utils.swift
 import UIKit
