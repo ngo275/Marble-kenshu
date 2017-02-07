@@ -17,7 +17,7 @@ ViewControllerはUIViewControllerを継承しており、あるViewを管理し�
 
 
 ## プロジェクト作成
-Xcodeの新規プロジェクトで、Single View Applicationを選択してプロジェクト名を入力します。ここではtest1というプロジェクト名にしてあります。プロジェクトの中身はフォルダを作成してわかりやすく構成しましょう。新しくフォルダを追加するには以下の画面のように右クリックからNew Groupを作成するところから行います。
+Xcodeの新規プロジェクトで、`Single View Application`を選択してプロジェクト名を入力します。ここではtest1というプロジェクト名にしてあります。プロジェクトの中身はフォルダを作成してわかりやすく構成しましょう。新しくフォルダを追加するには以下の画面のように右クリックから`New Group`を作成するところから行います。
 
 ![フォルダーの作成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/1.png)
 
@@ -29,29 +29,29 @@ Storyboardは一つのファイルに詰め込むとチームで開発してい�
 
 ![Storyboardの作成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/4.png)
 
-記事一覧ページはTableViewを利用して表示しますが、Cellは、コードで生成せずに、自分でGUIを利用して作成します。Viewパーツ用のファイル（これをXib（ニブ）ファイルと呼びます）にカスタムビューを作成していきます。Xibファイルは以下の画面から作成します。基本的なファイルの拡張子は.swiftになるのですが、Storyboardの拡張子は.storyboard、Xibファイルの拡張子は.xibになります。.plistという拡張子を持つものはプロジェクトに関する設定を記述しているものです。ATSなどの設定でいじることになるでしょう。AppleはHTTP通信に関して厳しく規制を始めており、HTTP通信を許可する設定をATSという欄をいじって行います。
+記事一覧ページはTableViewを利用して表示しますが、Cellは、コードで生成せずに、自分でGUIを利用して作成します。Viewパーツ用のファイル（これをXib（ニブ）ファイルと呼びます）にカスタムビューを作成していきます。Xibファイルは以下の画面から作成します。基本的なファイルの拡張子は.swiftになるのですが、Storyboardの拡張子は`.storyboard`、Xibファイルの拡張子は`.xib`になります。`.plist`という拡張子を持つものはプロジェクトに関する設定を記述しているものです。ATSなどの設定でいじることになるでしょう。AppleはHTTP通信に関して厳しく規制を始めており、HTTP通信を許可する設定をATSという欄をいじって行います。
 
 ![xibファイルの作成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/3.png)
 
 ## Storyboardで準備
 
-まず、記事一覧ページを表示できるところまでを目安に進めていきます。StoryboardとArticleViewControllerを関連付けて、Editor -> Embed in -> Navigation ControllerでNavigationControllerをつけます。
+まず、記事一覧ページを表示できるところまでを目安に進めていきます。StoryboardとArticleViewControllerを関連付けて、`Editor -> Embed in -> Navigation Controller`で`NavigationController`をつけます。
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/5.png)
 
-ArticleViewControllerにTableViewを挿入します。TableViewControllerを利用しても良いのですが、ViewControllerにTableViewを入れてテーブルを作成したほうがカスタムしやすいので、ArticleViewControllerにTableViewを挿入する形式にします。
+`ArticleViewController`に`TableView`を挿入します。`TableViewController`を利用しても良いのですが、`ViewController`に`TableView`を入れてテーブルを作成したほうがカスタムしやすいので、`ArticleViewController`に`TableView`を挿入する形式にします。
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/6.png)
 
-次にTableViewを画面全体に引き伸ばします。右下でConstraintの設定をしていきます。上下左右を0にしてAdd 4 Constraintsとしましょう。
+次に`TableView`を画面全体に引き伸ばします。右下でConstraintの設定をしていきます。上下左右を0にして`Add 4 Constraints`としましょう。
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/7.png)
 
-今のでConstraintsは変更されました。しかし、現状のTableViewとサイズや位置（Frames）とのずれが生じているのでUpdate FramesでTableViewの制約条件を更新しましょう。
+今のでConstraintsは変更されました。しかし、現状の`TableView`とサイズや位置（Frames）とのずれが生じているので`Update Frames`で`TableView`の制約条件を更新しましょう。
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/8.png)
 
-こうすると、画面いっぱいにTableViewが広がるのですが、左右にマージンが残っています。これを消していきましょう。左端直線を選択して、SecondItemのRelative to margin、右端はFirstItemのRelative to marginのチェックを外します。左右のマージンが消えればOKです。
+こうすると、画面いっぱいに`TableView`が広がるのですが、左右にマージンが残っています。これを消していきましょう。左端直線を選択して`、SecondItem`の`Relative to margin`、右端は`FirstItem`の`Relative to margin`のチェックを外します。左右のマージンが消えればOKです。
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/9.png)
 
@@ -59,7 +59,7 @@ TableViewCellを入れます。
 
 ![TableViewCellの追加](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/10.png)
 
-同様に上部にマージンが残るので、Ajust Scroll ...のチェックを外します。（画像は外す前です）
+同様に上部にマージンが残るので、`Ajust Scroll ...`のチェックを外します。（画像は外す前です）
 
 ![TableViewの上部のマージン削除](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/11.png)
 
@@ -67,9 +67,9 @@ Cellとそれに対応するファイルの関連付けを行っておきまし�
 
 ![関連付け](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/12.png)
 
-次にTableViewのDelegateの設定も以下の画面のように行っておきます。Delegateは'移譲'と言って、異なるクラス（ファイル）間等でメソッドをまたいで使いたい時に利用します。例えばTableViewCellのファイルにはタップした時に起こるアクションを記述できるけども、Articleに関するデータをそのCellのファイルは持っていないかもしれないことがあります。
+次に`TableView`のDelegateの設定も以下の画面のように行っておきます。Delegateは'移譲'と言って、異なるクラス（ファイル）間等でメソッドをまたいで使いたい時に利用します。例えばTableViewCellのファイルにはタップした時に起こるアクションを記述できるけども、Articleに関するデータをそのCellのファイルは持っていないかもしれないことがあります。
 
-移譲というとわかりにくいかもしれませんが、簡単に言いますと、自分だけでは（例えば使いたいプロパティを持っていないから）実装できないので、やってほしいことを宣言するから、その実装を頼みます、と他の場所に頼んでいるという風に思っておけば良いでしょう。頼む側を移譲元、頼まれる側を移譲先と言います。例えば`UITableViewDelegate`は移譲先がArticleViewControllerです。ArticleViewControllerは、頼まれたからやってやるぜ、という宣言をしないといけないのですが、それがネットでよく見かける
+移譲というとわかりにくいかもしれませんが、簡単に言いますと、自分だけでは（例えば使いたいプロパティを持っていないから）実装できないので、やってほしいことを宣言するから、その実装を頼みます、と他の場所に頼んでいるという風に思っておけば良いでしょう。頼む側を移譲元、頼まれる側を移譲先と言います。例えば`UITableViewDelegate`は移譲先が`ArticleViewController`です。`ArticleViewController`は、頼まれたからやってやるぜ、という宣言をしないといけないのですが、それが調べているとよく見かける
 
 ```swift
 tableView.delegate = self
@@ -80,24 +80,24 @@ tableView.dataSource = self
 
 ![TableViewのDelegateの設定](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/13.png)
 
-tableViewという変数をArticleViewControllerに追加します。
+`tableView`という変数を`ArticleViewController`に追加します。
 
 ![TableViewという変数をArticleViewControllerに追加](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/18.png)
 
 
 ## TableViewCellの作成
 
-先ほど作成したArticleTableViewCell.xibファイルを開いてそこにTableViewCellを挿入します。この中に記事一覧のセルに必要なものを挿入します。Image Viewとlabelで作っていきます。Constraintsの設定をしていきます。UIImageViewのサイズを80×80にして上、左からの位置（offset）を8にしておきます。タイトルや日付もそれぞれの間隔を8にして設定していきます。AutoLayoutまわりの[これ](http://qiita.com/kinopontas/items/d08f84dbb711c5acbe28)を参考にしてください。
+先ほど作成した`ArticleTableViewCell.xib`ファイルを開いてそこに`TableViewCell`を挿入します。この中に記事一覧のセルに必要なものを挿入します。Image Viewとlabelで作っていきます。Constraintsの設定をしていきます。UIImageViewのサイズを*80×80*にして上、左からの位置（offset）を8にしておきます。タイトルや日付もそれぞれの間隔を8にして設定していきます。AutoLayoutまわりの[これ](http://qiita.com/kinopontas/items/d08f84dbb711c5acbe28)を参考にしてください。
 
 ![TableViewCellの作成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/14.png)
 
-ArticleTableViewCellの関連付けやIdentifierの設定を行います。
+`ArticleTableViewCell`の関連付けやIdentifierの設定を行います。
 
 ![関連付け](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/15.png)
 
 ![関連付け](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/16.png)
 
-ArticleTableViewCell.swiftとUIView（Cellには入っているViewパーツ）の関連付けをしていきます。ここで、ArticleTableViewCellに入っているViewパーツに`thumbnail`や`title`、`desc`、`date`という名前の変数を作成します。コントロールを押しながらViewパーツをドラッグしてArticleTableViewCell.swiftと繋ぎましょう。2画面にするにはXcodeの右上にある2つの円が重なっているマークをクリックします。
+`ArticleTableViewCell.swift`とUIView（Cellには入っているViewパーツ）の関連付けをしていきます。ここで、ArticleTableViewCellに入っているViewパーツに`thumbnail`や`title`、`desc`、`date`という名前の変数を作成します。コントロールを押しながらViewパーツをドラッグして`ArticleTableViewCell.swift`と繋ぎましょう。2画面にするにはXcodeの右上にある2つの円が重なっているマークをクリックします。
 ![２画面にする方法](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/24.png)
 
 
@@ -114,9 +114,10 @@ ArticleTableViewCell.swiftとUIView（Cellには入っているViewパーツ）�
 
 ## Carthageの導入
 
-Swiftはライブラリを追加して機能を拡張して実装していきます。そのライブラリ管理を行ってくれるツールを導入します。そのツールがCarthage（カルタゴもしくはカーセッジ、どちらでも良いです。Candleではカルタゴと呼んでいます）になります。他にもCocoa Podというツールもありますが、ここではCarthageをお勧めしてます。
-`http://qiita.com/yutat93/items/97fe9bc2bf2e97da7ec1`
-これが非常にわかりやすくまとまっているので参考にしてインストールしてください。Terminalでプロジェクト場所に行き、以下の5つを新しく作成したCartfileに書き込んで`carthage update --platform iOS --no-use-binaries`を実行します。
+Swiftはライブラリを追加して機能を拡張して実装していきます。そのライブラリ管理を行ってくれるツールを導入します。そのツールが**Carthage**（カルタゴもしくはカーセッジ、どちらでも良いです）になります。他にも`Cocoa Pod`というツールもありますが、ここではCarthageをお勧めしてます。
+[これ](http://qiita.com/yutat93/items/97fe9bc2bf2e97da7ec1)が非常にわかりやすくまとまっているので参考にしてインストールしてください。
+
+Terminalでプロジェクト場所に行き、以下の5つを新しく作成した`Cartfile`に書き込んで`carthage update --platform iOS --no-use-binaries`を実行します。
 
 ```Cartfile.
 github "SwiftyJSON/SwiftyJSON"    
@@ -126,15 +127,15 @@ github "realm/realm-cocoa"
 github "ishkawa/APIKit" ~> 3.0
 ```
 
-SwiftyJson: JSONの取り扱いを簡単に行えるライブラリ。
+    SwiftyJson: JSONの取り扱いを簡単に行えるライブラリ。
 
-BrightFutures: プロミスの取り扱いを簡単にするライブラリ。
+    BrightFutures: プロミスの取り扱いを簡単にするライブラリ。
 
-SDWebImage: 画像の非同期処理を行うライブラリ。記事一覧をスクロールする時に動作が重くなるのを防げます。（Kingfisherに置き換えたい。）
+    SDWebImage: 画像の非同期処理を行うライブラリ。記事一覧をスクロールする時に動作が重くなるのを防げます。（Kingfisherに置き換えたい。）
 
-realm-cocoa: Realmという永続的な記憶システムを利用可能にします。UserDefaultsよりも複雑なデータを簡単に保存できます。
+    realm-cocoa: Realmという永続的な記憶システムを利用可能にします。UserDefaultsよりも複雑なデータを簡単に保存できます。
 
-APIKit: API通信を便利に行えるライブラリ。APIに関して次で説明します。Alamofireから移行しました。
+    APIKit: API通信を便利に行えるライブラリ。APIに関して次で説明します。Alamofireから移行しました。
 
 これらのライブラリを利用する時は、`import UIKit`のようにファイルの先頭に利用するライブラリをインポートする宣言します。
 
