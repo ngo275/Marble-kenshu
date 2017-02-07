@@ -323,8 +323,8 @@ class ArticleTableViewCell: UITableViewCell {
 
         // guard let で書くとき. ネストが深くならない、かつ、早期リターンできるのでこちら推奨.
         guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
-        guard let thumbnail = try? Data(contentsOf: thumbnailURL) else { return }
-        thumbnail.image = UIImage(data: thumbnail)
+        guard let thumb = try? Data(contentsOf: thumbnailURL) else { return }
+        thumbnail.image = UIImage(data: thumb)
 
     }
 }
@@ -564,7 +564,9 @@ import Result
 class ArticleViewController: UIViewController {
 
     private let viewmodel = ArticleViewModel()
-    private var articles: [Article] {
+    
+    // ViewModelに実際のデータをもたせているので、ここではget/setでViewModelにアクセスしている
+    private var articles: [Article] {
         get {
             return viewmodel.articles
         }
@@ -596,9 +598,9 @@ class ArticleViewController: UIViewController {
         ]
         viewmodel.fetchArticleList(params: params)
             .onSuccess { [weak self] data in
-                self?.articles = data.1
+                self?.articles = data.articles
                 self?.tableView.reloadData()
-                print(data.1)
+                print(data.articles)
             }
             .onFailure { [weak self] error in
                 self?.showErrorAlert(error.localizedDescription, completion: nil)
@@ -652,8 +654,8 @@ func bindDataCell(article: Article) {
 
     // guard let で書くとき. ネストが深くならない、かつ、早期リターンできるのでこちら推奨.
     guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
-    guard let thumbnail = try? Data(contentsOf: thumbnailURL) else { return }
-    thumbnail.image = UIImage(data: thumbnail)
+    guard let thumb = try? Data(contentsOf: thumbnailURL) else { return }
+    thumbnail.image = UIImage(data: thumb)
     
 }
 ```
