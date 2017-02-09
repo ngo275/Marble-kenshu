@@ -553,7 +553,7 @@ class ArticleViewModel {
 }
 ```
 
-次に`ArticleViewController.swift`にプロパティをつけていきます。まず`ArticleViewModel`、`APIManager`をインスタンス化します。都合上`ArticleViewModel`に`[Article]型`の`articles`というプロパティを持たせていますが、それの読み書きを`ArticleViewController`で行っています（`get`や`set`）。
+次に`ArticleViewController.swift`にプロパティをつけていきます。まず`ArticleViewModel`、`APIManager`をインスタンス化します。都合上`ArticleViewModel`に`[Article]型`の`articles`というプロパティを持たせていますが、それの読み書きを`ArticleViewController`で行っています（`get`や`set`）。データの中身自体をViewControllerに持たせないためです。
 `UIKit`, `SwiftyJSON`, `Result`をインポートしましょう。
 
 ```ArticleViewController.swift
