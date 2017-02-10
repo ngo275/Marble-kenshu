@@ -1013,72 +1013,53 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 今はまだタブがなく記事一覧ページがいきなり出てくるだけなのでタブを取り入れてコンテンツを増やしていきたいと思います。
 
-Main.storyboardにTabBarControllerを追加します。デフォルトで2つのViewControllerがついてきますが、これらを削除します。NavigationControllerとArticleViewControllerをコピーしてこれらも削除します。次にArticle.storyboardを作成し、その中に先ほどコピーした2つのViewControllerをペーストします。
+`Main.storyboard`に`TabBarController`を追加します。デフォルトで2つの`ViewController`がついてきますが、これらを削除します。`ViewController`の`NavigationController`と`ArticleViewController`をコピーします（最初からあった`ViewController`は不要になります）。次に`Article.storyboard`を作成し、その中に先ほどコピーした2つのViewControllerをペーストします。
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/27.png)
 
-`Main.storyboard`には`TabBarController`ひとつが残っているようにしたら、これに`Is Initial View Controller`の設定をしておきます。`Article.storyboard`の`NavigationController`にも同じように設定します。基本的に各storyboardには必ず`Is Initial View Controller`をつけたStoryboardが存在するようにしなければなりません。
+`Main.storyboard`には`TabBarController`のみが残っているようにしたら、これに`Is Initial View Controller`の設定をしておきます。`Article.storyboard`の`UINavigationController`にも同じように設定します。**基本的に各storyboardには必ず`Is Initial View Controller`をつけたStoryboardが存在するようにしなければなりません。**
 
 ~~次は、`Article.storyboard`の`NavigationController`に対応する`ViewController`を作成しなければなりません。`ArticleContainerViewController`とします。各Tabに1つ`ContainerViewController`を対応させる必要があります。`ContainerViewController`というフォルダを作成して、その中に`ContainerViewController`を追加していきましょう。新規作成で`CocoaTouchClass`で`UINavigationController`を継承した`ArticleContainerViewController`を作ります。そして下の画面のように`NavigationController`と関連付けをしておきましょう。
 
-`ArticleViewController.swift`とかに紐づく`NavigationViewController`はデフォルトのままでよくて、いちいちそれに紐づく`ContainerViewController`を作る必要はありません。
+`ArticleViewController.swift`とかに紐づく`UINavigationController`はデフォルトのままでよくて、いちいちそれに紐づく`ContainerViewController`を作る必要はありませんでした。
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/28.png)
 
-~~`ArticleContainerViewController`は以下のように少しだけメソッドを付け足しておきます。
-
-以下のコードも不要です。
-
-    import UIKit
-
-    class ArticleContainerViewController: UINavigationController {
-    
-        var statusBarStyle: UIStatusBarStyle = UIStatusBarStyle.Default
-        
-        required init?(coder aDecoder: NSCoder) {
-            super.init(coder: aDecoder)
-        }
-        
-        override func viewDidLoad() {
-            super.viewDidLoad()
-        }
-    
-        override func didReceiveMemoryWarning() {
-            super.didReceiveMemoryWarning()
-        }
-        
-        override func preferredStatusBarStyle() -> UIStatusBarStyle {
-            return statusBarStyle
-        }
-    
-    }
-
-*この先要修正*
-
-次は、`Main.storyboard`に対応する`ViewController`を作成します。`MainTabBarController`を先ほどの`ContainerViewController`のディレクトリに作成します。`CocoatouchClass`から`UITabBarController`を選択すると良いです。そしてStoryboardで関連付けもしておきましょう。
+次は、`Main.storyboard`に対応する`ViewController`を作成します。`MainTabBarController`を`AppDelegate.swift`の階層あたりに作成します。`CocoatouchClass`から`UITabBarController`を選択すると良いです。そしてStoryboardで関連付けもしておきましょう。
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/29.png)
 
-`MainTabBarController`にまず、イニシャライザを記述します。
+`MainTabBarController`に`viewDidLoad`でTabに入れるべき`Viewcontroller`（`ArticleViewController`, `SearchViewController`, `LikeViewController`, `MypageViewController`）を指定します。
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.tabBar.translucent = true
-    }
+```MainTabBarController.swift
+import UIKit
+
+class MainTabBarController: UITabBarController {
     
-次に、viewDidLoadでTabに入れるべき`Viewcontroller`を指定します。
-
     override func viewDidLoad() {
-    
-        let articleStoryboard = UIStoryboard(name: "Article", bundle: nil)
-        let articleViewController = articleStoryboard.instantiateInitialViewController() as! ArticleContainerViewController
-        let viewControllers = [articleViewController]
-        self.setViewControllers(viewControllers, animated: false)
         super.viewDidLoad()
-    
+        
+        // Arrayにした方がきれいに見えそうです...
+        let articleStoryboard = UIStoryboard(name: "Article", bundle: nil)
+        let searchStoryboard = UIStoryboard(name: "Search", bundle: nil)
+        let likeStoryboard = UIStoryboard(name: "Like", bundle: nil)
+        let mypageStoryboard = UIStoryboard(name: "Mypage", bundle: nil)
+        let articleViewController = articleStoryboard.instantiateInitialViewController() as! UINavigationController
+        let searchViewController = searchStoryboard.instantiateInitialViewController() as! UINavigationController
+        let likeViewController = likeStoryboard.instantiateInitialViewController() as! UINavigationController
+        let mypageViewController = mypageStoryboard.instantiateInitialViewController() as! UINavigationController
+        let viewControllers = [articleViewController, searchViewController, likeViewController, mypageViewController]
+        self.setViewControllers(viewControllers, animated: false)
     }
 
-`super.viewDidLoad`の位置に注意しましょう。
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+}
+
+```
+
 
 ![デモ](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/30.png)
 
@@ -1093,11 +1074,11 @@ TabBarItemを`Article.storyboard`に挿入します。
 
 ![ArticleStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/33.png)
 
-他に必要なTab（Search, Like, Mypage）も付け足します。Storyboard、ViewController、ContainerViewControllerを作成して`MainTabBarController`に追加分のViewControllerを書いていきます。
+他に必要なTab（Search, Like, Mypage）も付け足します。Storyboard、ViewControllerを作成して`MainTabBarController`に追加分のViewControllerを書いていきます。
 
 手順をもう一度簡単にまとめると以下のようになります。
 
-新規作成でStoryboardを作ります。`ViewController`を追加、ツールバーの`Editor/EmbedIn/NavigationController`でNavigationControllerを追加します。今できた2つのViewControllerのそれぞれに対応するViewControllerを作成します（e.g. `Search.storyboard`, `SearchViewController.swift`, `SearchContainerViewController.swift`）。この時StoryboardとViewControllerの関連付け、`IsInitialViewController`の設定、NavigationControllerにTabBarItemの追加を忘れないようにしましょう。
+新規作成でStoryboardを作ります。`ViewController`を追加、ツールバーの`Editor/EmbedIn/NavigationController`でUINavigationControllerを追加します。今できた2つのViewControllerのそれぞれに対応するViewControllerを作成します（e.g. `Search.storyboard`, `SearchViewController.swift`）。この時StoryboardとViewControllerの関連付け、`IsInitialViewController`の設定、UINavigationControllerにTabBarItemの追加を忘れないようにしましょう。
 
 ![タブ完成](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/34.png)
 
