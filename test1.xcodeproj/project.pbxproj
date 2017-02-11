@@ -34,15 +34,11 @@
 		25A67D4B1D61CA380097152C /* TableViewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A67D4A1D61CA380097152C /* TableViewUtils.swift */; };
 		25A67D5C1D63401F0097152C /* StoryboardLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A67D5B1D63401F0097152C /* StoryboardLoadable.swift */; };
 		25A67D661D644A3B0097152C /* Article.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25A67D651D644A3B0097152C /* Article.storyboard */; };
-		25A67D6B1D644CAC0097152C /* ArticleContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A67D6A1D644CAC0097152C /* ArticleContainerViewController.swift */; };
 		25A67D6F1D64535F0097152C /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A67D6E1D64535F0097152C /* MainTabBarController.swift */; };
 		25A67D711D64607B0097152C /* Search.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25A67D701D64607B0097152C /* Search.storyboard */; };
-		25A67D731D6462710097152C /* SearchContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A67D721D6462710097152C /* SearchContainerViewController.swift */; };
 		25A67D751D6462B20097152C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A67D741D6462B20097152C /* SearchViewController.swift */; };
 		25A67D771D6462BF0097152C /* LikeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A67D761D6462BF0097152C /* LikeViewController.swift */; };
 		25A67D791D6462C80097152C /* MypageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A67D781D6462C80097152C /* MypageViewController.swift */; };
-		25A67D7B1D6462E90097152C /* LikeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A67D7A1D6462E90097152C /* LikeContainerViewController.swift */; };
-		25A67D7D1D6462F90097152C /* MypageContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A67D7C1D6462F90097152C /* MypageContainerViewController.swift */; };
 		25A67D7F1D6463790097152C /* Mypage.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25A67D7E1D6463790097152C /* Mypage.storyboard */; };
 		25A67D811D6463B50097152C /* Like.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25A67D801D6463B50097152C /* Like.storyboard */; };
 		25BE4B9B1E38DA2A00A9B509 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25BE4B9A1E38DA2A00A9B509 /* APIKit.framework */; };
@@ -81,15 +77,11 @@
 		25A67D4A1D61CA380097152C /* TableViewUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewUtils.swift; sourceTree = "<group>"; };
 		25A67D5B1D63401F0097152C /* StoryboardLoadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryboardLoadable.swift; sourceTree = "<group>"; };
 		25A67D651D644A3B0097152C /* Article.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Article.storyboard; sourceTree = "<group>"; };
-		25A67D6A1D644CAC0097152C /* ArticleContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleContainerViewController.swift; sourceTree = "<group>"; };
 		25A67D6E1D64535F0097152C /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		25A67D701D64607B0097152C /* Search.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Search.storyboard; sourceTree = "<group>"; };
-		25A67D721D6462710097152C /* SearchContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchContainerViewController.swift; sourceTree = "<group>"; };
 		25A67D741D6462B20097152C /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		25A67D761D6462BF0097152C /* LikeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LikeViewController.swift; sourceTree = "<group>"; };
 		25A67D781D6462C80097152C /* MypageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MypageViewController.swift; sourceTree = "<group>"; };
-		25A67D7A1D6462E90097152C /* LikeContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LikeContainerViewController.swift; sourceTree = "<group>"; };
-		25A67D7C1D6462F90097152C /* MypageContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MypageContainerViewController.swift; sourceTree = "<group>"; };
 		25A67D7E1D6463790097152C /* Mypage.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Mypage.storyboard; sourceTree = "<group>"; };
 		25A67D801D6463B50097152C /* Like.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Like.storyboard; sourceTree = "<group>"; };
 		25BE4B9A1E38DA2A00A9B509 /* APIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = APIKit.framework; path = Carthage/Build/iOS/APIKit.framework; sourceTree = "<group>"; };
@@ -144,7 +136,6 @@
 			isa = PBXGroup;
 			children = (
 				25BE4B9C1E38DBC000A9B509 /* Requests */,
-				25A67D671D644BFB0097152C /* ContainerViewController */,
 				25A67D451D61C7680097152C /* Protocols */,
 				25A67D3A1D61A0E90097152C /* Utils */,
 				254AB7D41D5C6D5B003C8345 /* Model */,
@@ -152,6 +143,7 @@
 				254AB7D21D5C6D43003C8345 /* ViewModel */,
 				254AB7D11D5C6D38003C8345 /* ViewController */,
 				254AB7BE1D5C6C28003C8345 /* AppDelegate.swift */,
+				25A67D6E1D64535F0097152C /* MainTabBarController.swift */,
 				254AB7D01D5C6C79003C8345 /* Stroyboards */,
 				254AB7C21D5C6C28003C8345 /* Main.storyboard */,
 				254AB7C51D5C6C28003C8345 /* Assets.xcassets */,
@@ -231,18 +223,6 @@
 				25A67D5B1D63401F0097152C /* StoryboardLoadable.swift */,
 			);
 			name = Protocols;
-			sourceTree = "<group>";
-		};
-		25A67D671D644BFB0097152C /* ContainerViewController */ = {
-			isa = PBXGroup;
-			children = (
-				25A67D6A1D644CAC0097152C /* ArticleContainerViewController.swift */,
-				25A67D6E1D64535F0097152C /* MainTabBarController.swift */,
-				25A67D721D6462710097152C /* SearchContainerViewController.swift */,
-				25A67D7A1D6462E90097152C /* LikeContainerViewController.swift */,
-				25A67D7C1D6462F90097152C /* MypageContainerViewController.swift */,
-			);
-			name = ContainerViewController;
 			sourceTree = "<group>";
 		};
 		25BE4B991E38DA2900A9B509 /* Frameworks */ = {
@@ -366,16 +346,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				25A67D5C1D63401F0097152C /* StoryboardLoadable.swift in Sources */,
-				25A67D7B1D6462E90097152C /* LikeContainerViewController.swift in Sources */,
 				25A67D3C1D61A20E0097152C /* APIManager.swift in Sources */,
 				25A67D6F1D64535F0097152C /* MainTabBarController.swift in Sources */,
 				25A67D441D61B4420097152C /* DateUtils.swift in Sources */,
 				25A67D751D6462B20097152C /* SearchViewController.swift in Sources */,
 				254AB7D81D5C6D97003C8345 /* ArticleViewModel.swift in Sources */,
-				25A67D7D1D6462F90097152C /* MypageContainerViewController.swift in Sources */,
 				254AB7D61D5C6D7F003C8345 /* ArticleViewController.swift in Sources */,
-				25A67D731D6462710097152C /* SearchContainerViewController.swift in Sources */,
-				25A67D6B1D644CAC0097152C /* ArticleContainerViewController.swift in Sources */,
 				25A67D791D6462C80097152C /* MypageViewController.swift in Sources */,
 				254AB7E21D5C7852003C8345 /* ArticleDetailViewController.swift in Sources */,
 				25A67D491D61C83C0097152C /* Reusable.swift in Sources */,
