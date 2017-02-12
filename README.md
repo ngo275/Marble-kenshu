@@ -322,7 +322,8 @@ class ArticleTableViewCell: UITableViewCell {
         */
 
         // guard let で書くとき. ネストが深くならない、かつ、早期リターンできるのでこちら推奨.
-        guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
+        // WebImageを使うとパフォーマンスが向上します
+        guard let thumbnailURL = URL(string: "https://i.vimeocdn.com/portrait/58832_300x300") else { return }
         guard let thumb = try? Data(contentsOf: thumbnailURL) else { return }
         thumbnail.image = UIImage(data: thumb)
 
