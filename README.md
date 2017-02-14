@@ -1014,7 +1014,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 今はまだタブがなく記事一覧ページがいきなり出てくるだけなのでタブを取り入れてコンテンツを増やしていきたいと思います。
 
-`Main.storyboard`に`TabBarController`を追加します。デフォルトで2つの`ViewController`がついてきますが、これらを削除します。`ViewController`の`NavigationController`と`ArticleViewController`をコピーします（最初からあった`ViewController`は不要になります）。次に`Article.storyboard`を作成し、その中に先ほどコピーした2つのViewControllerをペーストします。
+`Main.storyboard`に`TabBarController`を追加します。デフォルトで2つの`ViewController`がついてきますが、これらを削除します。`ViewController`の`NavigationController`と`ArticleViewController`をコピーします（最初からあった`ViewController`は不要になります）。次に`Article.storyboard`を作成し、その中に先ほどコピーした2つのViewControllerをペーストします。コントロール+Cとコントロール+Vでできます。
 
 ![MainStoryboardを編集](https://raw.github.com/wiki/ngo275/Marble-kenshu/images/27.png)
 
