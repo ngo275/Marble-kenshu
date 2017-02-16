@@ -117,7 +117,7 @@ tableView.dataSource = self
 Swiftはライブラリを追加して機能を拡張して実装していきます。そのライブラリ管理を行ってくれるツールを導入します。そのツールが**Carthage**（カルタゴもしくはカーセッジ、どちらでも良いです）になります。他にも`Cocoa Pod`というツールもありますが、ここではCarthageをお勧めしてます。
 [これ](http://qiita.com/yutat93/items/97fe9bc2bf2e97da7ec1)が非常にわかりやすくまとまっているので参考にしてインストールしてください。
 
-Terminalでプロジェクト場所に行き、以下の5つを新しく作成した`Cartfile`に書き込んで`carthage update --platform iOS --no-use-binaries`を実行します。
+Terminalでプロジェクト場所に行き、以下の5つを新しく作成した`Cartfile`に書き込んで`carthage update --platform iOS --no-use-binaries`を実行します。このプロジェクトを実行できないときはここのライブラリのバージョンが怪しいかもしれません。
 
 ```Cartfile.
 github "SwiftyJSON/SwiftyJSON"    
