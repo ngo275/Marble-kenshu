@@ -1020,7 +1020,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 `Main.storyboard`には`TabBarController`のみが残っているようにしたら、これに`Is Initial View Controller`の設定をしておきます。`Article.storyboard`の`UINavigationController`にも同じように設定します。**基本的に各storyboardには必ず`Is Initial View Controller`をつけたStoryboardが存在するようにしなければなりません。**
 
-~~次は、`Article.storyboard`の`NavigationController`に対応する`ViewController`を作成しなければなりません。`ArticleContainerViewController`とします。各Tabに1つ`ContainerViewController`を対応させる必要があります。`ContainerViewController`というフォルダを作成して、その中に`ContainerViewController`を追加していきましょう。新規作成で`CocoaTouchClass`で`UINavigationController`を継承した`ArticleContainerViewController`を作ります。そして下の画面のように`NavigationController`と関連付けをしておきましょう。
+~~次は、`Article.storyboard`の`NavigationController`に対応する`ViewController`を作成しなければなりません。`ArticleContainerViewController`とします。各Tabに1つ`ContainerViewController`を対応させる必要があります。`ContainerViewController`というフォルダを作成して、その中に`ContainerViewController`を追加していきましょう。新規作成で`CocoaTouchClass`で`UINavigationController`を継承した`ArticleContainerViewController`を作ります。そして下の画面のように`NavigationController`と関連付けをしておきましょう。~~
 
 `ArticleViewController.swift`とかに紐づく`UINavigationController`はデフォルトのままでよくて、いちいちそれに紐づく`ContainerViewController`を作る必要はありませんでした。
 
