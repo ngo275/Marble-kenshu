@@ -454,7 +454,7 @@ extension Date {
 }
 ```
 
-これがあることで`Date.dateFromString`(`日付に関するStringデータ.stringValue`)のように`String`から`Date`に簡単に型変換を行うことが可能になります。
+これがあることで`Date.dateFromString`(`日付に関するStringデータ.stringValue`)のように`String`から`Date`に簡単に型変換を行うことが可能になります。`NSData`がSwift3になって`Data`になりました。
 
 Modelの中にある`Article.swift`を実装します。Modelの中に`User.swift`も作成しておきます。ここは天下り的になってしまいますが、Model, ViewModelを以下のように実装します。このようにArticleという構造体を導入することで、データの受け渡しや、欲しいデータのアクセスを簡易化できます。jsonで取り扱うと、`json["result"]["Article"]["title"].stringValue`というアクセス方法を毎回取らねばなりません。Articleオブジェクトにすると`article.title`で利用できます。タイポも減るしいいですね。  
 
