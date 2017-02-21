@@ -1,4 +1,4 @@
-# Marble-kenshu
+# Marble-kenshu MARBLEのdemo作成
 
 *コード自体はSwift3に対応させました。Carthageをインストールしないと動かないかもしれません。ライブラリのバージョンが違っていて動かない場合は聞いてください。*
 
