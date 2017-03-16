@@ -85,6 +85,7 @@ struct Article {
 //    }
 }
 
+// APIKitに移行
 /*struct ArticleSerializer: ResponseSerializerType {
     
     typealias SerializedObject = (max: Int, articles: [Article])
